@@ -3,7 +3,7 @@ import { FavouritesTravelService } from './favourites-travel.service';
 import { CreateFavouritesTravelDto } from './dto/create-favourites-travel.dto';
 import { UpdateFavouritesTravelDto } from './dto/update-favourites-travel.dto';
 
-@Controller('favourites-travel')
+@Controller()
 export class FavouritesTravelController {
   constructor(private readonly favouritesTravelService: FavouritesTravelService) {}
 

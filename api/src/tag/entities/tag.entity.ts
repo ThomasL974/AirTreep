@@ -4,9 +4,9 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class Tag {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column()
-    libelle: string
+    libelle!: string
     @ManyToOne(() => Travel, travel => travel.tags)
-    travel: Travel
+    travel!: Travel
 }

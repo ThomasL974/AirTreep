@@ -3,7 +3,7 @@ import { TravelService } from './travel.service';
 import { CreateTravelDto } from './dto/create-travel.dto';
 import { UpdateTravelDto } from './dto/update-travel.dto';
 
-@Controller('travel')
+@Controller()
 export class TravelController {
   constructor(private readonly travelService: TravelService) {}
 

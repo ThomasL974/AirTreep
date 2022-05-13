@@ -5,13 +5,13 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 @Entity()
 export class Comment {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column()
-    description: string
+    description!: string
     @CreateDateColumn()
-    createdAt: string
+    createdAt!: string
     @ManyToOne(() => User, user => user.comments)
-    user: User
+    user!: User
     @ManyToOne(()=>Travel, travel=>travel.comments)
-    travel: Travel
+    travel!: Travel
 }

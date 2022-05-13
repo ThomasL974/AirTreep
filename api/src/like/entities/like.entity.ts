@@ -5,11 +5,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class Like {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column()
-    liked: boolean
+    liked!: boolean
     @ManyToOne(() => User, user => user.likes)
-    user: User
+    user!: User
     @ManyToOne(() => Travel, travel => travel.likes)
-    travel: Travel
+    travel!: Travel
 }

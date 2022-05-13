@@ -4,15 +4,15 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 @Entity()
 export class Picture {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column()
-    position: string
+    position!: string
     @Column()
-    title: string
+    title!: string
     @Column()
-    urlImg: string
+    urlImg!: string
     @CreateDateColumn()
-    createdAt: string
+    createdAt!: string
     @ManyToOne(() => Travel, travel => travel.pictures)
-    travel: Travel
+    travel!: Travel
 }

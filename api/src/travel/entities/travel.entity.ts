@@ -9,31 +9,31 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 @Entity()
 export class Travel {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column()
-    title: string
+    title!: string
     @Column()
-    difficulty: number
+    difficulty!: number
     @Column()
-    description: string
+    description!: string
     @CreateDateColumn()
-    createdAt: string
+    createdAt!: string
     @Column()
-    locomotionType: number
+    locomotionType!: number
     @Column()
-    startLocation: string
+    startLocation!: string
     @Column()
-    arrivalLocation: string
+    arrivalLocation!: string
     @OneToMany(() => Picture, picture => picture.travel)
-    pictures: Picture[]
+    pictures!: Picture[]
     @ManyToOne(() => User, user => user.travels)
-    user: User
+    user!: User
     @OneToMany(() => Tag, tag => tag.travel)
-    tags: Tag[]
+    tags!: Tag[]
     @OneToMany(() => Comment, comment => comment.travel)
-    comments: Comment[]
+    comments!: Comment[]
     @OneToMany(() => Like, like => like.travel)
-    likes: Like[]
+    likes!: Like[]
     @OneToMany(() => FavouritesTravel, favouriteTravel => favouriteTravel.travel)
-    favourites: FavouritesTravel[]
+    favourites!: FavouritesTravel[]
 }

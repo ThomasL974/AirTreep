@@ -5,11 +5,11 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class FavouritesTravel {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column()
-    favourite: boolean
+    favourite!: boolean
     @ManyToOne(() => User, user => user.favourites)
-    user: User
+    user!: User
     @ManyToOne(() => Travel, travel => travel.favourites)
-    travel: Travel
+    travel!: Travel
 }

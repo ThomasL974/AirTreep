@@ -8,32 +8,32 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } f
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
     @Column({ unique: true })
     @IsEmail({ message: 'L\'email n\'est pas correct' })
-    email: string
+    email!: string
     @Column()
-    password: string
+    password!: string
     @CreateDateColumn()
-    createdAt: string
+    createdAt!: string
     @Column()
-    firstName: string
+    firstName!: string
     @Column()
-    lastName: string
+    lastName!: string
     @Column()
-    description: string
+    description!: string
     @Column({ type: 'date' })
-    birthday: string
+    birthday!: string
     @Column()
-    profilImg: string
+    profilImg!: string
     @Column()
-    pseudo: string
+    pseudo!: string
     @OneToMany(() => Comment, comment => comment.user)
-    comments: Comment[]
+    comments!: Comment[]
     @OneToMany(() => Like, like => like.user)
-    likes: Like[]
+    likes!: Like[]
     @OneToMany(() => Travel, travel => travel.user)
-    travels: Travel[]
+    travels!: Travel[]
     @OneToMany(() => FavouritesTravel, favouriteTravel => favouriteTravel.user)
-    favourites: FavouritesTravel[]
+    favourites!: FavouritesTravel[]
 }
