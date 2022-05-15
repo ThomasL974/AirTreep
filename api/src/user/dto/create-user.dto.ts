@@ -11,9 +11,7 @@ export class CreateUserAccountDto {
     @IsNotEmpty({ message: 'Le mot de passe est requis' })
     password!: string
     createdAt!: string
-    @IsNotEmpty({ message: 'Le prénom est requis' })
     firstName!: string
-    @IsNotEmpty({ message: 'Le nom est requis' })
     lastName!: string
     description!: string
     birthday!: string

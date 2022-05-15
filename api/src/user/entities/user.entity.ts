@@ -16,17 +16,17 @@ export class User {
     password!: string
     @CreateDateColumn()
     createdAt!: string
-    @Column()
+    @Column({nullable: true})
     firstName!: string
-    @Column()
+    @Column({nullable: true})
     lastName!: string
-    @Column()
+    @Column({nullable: true})
     description!: string
-    @Column({ type: 'date' })
+    @Column({ type: 'date', nullable: true})
     birthday!: string
-    @Column()
+    @Column({nullable: true})
     profilImg!: string
-    @Column()
+    @Column({nullable: true})
     pseudo!: string
     @OneToMany(() => Comment, comment => comment.user)
     comments!: Comment[]

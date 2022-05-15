@@ -28,23 +28,23 @@ require('dotenv').config()
         module: UserModule,
       },
       {
-        path: '/travel',
+        path: '/travels',
         module: TravelModule,
       },
       {
-        path: '/like',
+        path: '/likes',
         module: LikeModule,
       },
       {
-        path: '/comment',
+        path: '/comments',
         module: CommentModule,
       },
       {
-        path: '/favourite',
+        path: '/favourites',
         module: FavouritesTravelModule,
       },
       {
-        path: '/picture',
+        path: '/pictures',
         module: PictureModule,
       },
     ]),
