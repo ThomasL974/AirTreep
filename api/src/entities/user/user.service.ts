@@ -45,6 +45,10 @@ export class UserService {
     const hashedPassword = await argon2.hash(createUserAccountDto.password)
     user.password = hashedPassword;
 
-    await this.userRepository.save(user)
+    try {
+      await this.userRepository.save(user)
+    } catch (error) {
+      return {message: 'Account already exist!'}
+    }
   }
 }

@@ -11,15 +11,16 @@ export class JwtAuthGuard implements CanActivate {
     return this.validateRequest(req);
   }
 
-  validateRequest(req){
+  validateRequest(req) {
     const bearerToken = req.headers.authorization || ' ';
-        const token = bearerToken.split(" ")[1];
-        const secret = process.env.JWT_SECRET || 'secret';
-        try {
-            verify(token, secret);
-            return true;
-        } catch (error) {
-            return false;
-        }
+    const token = bearerToken.split(" ")[1];
+    const secret = process.env.JWT_SECRET || 'secret';
+    try {
+      const information : any = verify(token, secret);
+      req.userId = information.userId;
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
