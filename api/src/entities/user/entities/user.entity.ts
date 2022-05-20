@@ -2,6 +2,7 @@ import { IsEmail } from "class-validator";
 import { Comment } from "src/entities/comment/entities/comment.entity";
 import { FavouritesTravel } from "src/entities/favourites-travel/entities/favourites-travel.entity";
 import { Like } from "src/entities/like/entities/like.entity";
+import { Picture } from "src/entities/picture/entities/picture.entity";
 import { Travel } from "src/entities/travel/entities/travel.entity";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -36,4 +37,6 @@ export class User {
     travels!: Travel[]
     @OneToMany(() => FavouritesTravel, favouriteTravel => favouriteTravel.user)
     favourites!: FavouritesTravel[]
+    @OneToMany(() => Picture, picture => picture.user)
+    pictures!: Picture[]
 }

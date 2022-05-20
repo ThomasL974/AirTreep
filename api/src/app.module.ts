@@ -24,27 +24,27 @@ require('dotenv').config()
     FavouritesTravelModule,
     RouterModule.register([
       {
-        path: '/auth',
+        path: 'auth',
         module: UserModule,
       },
       {
-        path: '/travels',
+        path: 'travels',
         module: TravelModule,
       },
       {
-        path: '/likes',
+        path: 'likes',
         module: LikeModule,
       },
       {
-        path: '/comments',
+        path: 'comments',
         module: CommentModule,
       },
       {
-        path: '/favourites',
+        path: 'favourites',
         module: FavouritesTravelModule,
       },
       {
-        path: '/pictures',
+        path: 'pictures',
         module: PictureModule,
       },
     ]),

@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { PictureService } from './picture.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
+import { JwtAuthGuard } from 'src/core/guards/jwt-auth.guard';
+import { CurrentUserId } from 'src/core/decorators/user.dacorator';
+import { User } from '../user/entities/user.entity';
 
 @Controller()
 export class PictureController {
   constructor(private readonly pictureService: PictureService) {}
 
-  @Post()
-  create(@Body() createPictureDto: CreatePictureDto) {
-    return this.pictureService.create(createPictureDto);
+  @UseGuards(new JwtAuthGuard)
+  @Post('create')
+  create(@Body() createPictureDto: CreatePictureDto, @CurrentUserId() userId: User) {
+    return this.pictureService.create(createPictureDto, userId);
   }
 
-  @Get()
+  @Get('list')
   findAll() {
     return this.pictureService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.pictureService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.pictureService.findOne(id);
   }
 
+  @UseGuards(new JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePictureDto: UpdatePictureDto) {
-    return this.pictureService.update(+id, updatePictureDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updatePictureDto: UpdatePictureDto) {
+    return this.pictureService.update(id, updatePictureDto);
   }
 
+  @UseGuards(new JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pictureService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.pictureService.remove(id);
   }
 }

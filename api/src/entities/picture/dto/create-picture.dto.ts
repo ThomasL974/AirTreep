@@ -1,5 +1,8 @@
+import { Travel } from "src/entities/travel/entities/travel.entity"
+
 export class CreatePictureDto {
-    position!: string
+    location!: string
     title!: string
     urlImg!: string
+    travelId!: number
 }

@@ -1,4 +1,5 @@
 import { Travel } from "src/entities/travel/entities/travel.entity";
+import { User } from "src/entities/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -6,7 +7,7 @@ export class Picture {
     @PrimaryGeneratedColumn()
     id!: number
     @Column()
-    position!: string
+    location!: string
     @Column()
     title!: string
     @Column()
@@ -15,4 +16,6 @@ export class Picture {
     createdAt!: string
     @ManyToOne(() => Travel, travel => travel.pictures)
     travel!: Travel
+    @ManyToOne(() => User, user => user.pictures)
+    user!: User
 }

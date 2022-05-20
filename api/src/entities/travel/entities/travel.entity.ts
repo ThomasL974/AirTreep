@@ -5,6 +5,7 @@ import { Picture } from "src/entities/picture/entities/picture.entity";
 import { Tag } from "src/entities/tag/entities/tag.entity";
 import { User } from "src/entities/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Difficulties } from "../enums/travel.enum";
 
 @Entity()
 export class Travel {
@@ -12,12 +13,20 @@ export class Travel {
     id!: number
     @Column()
     title!: string
-    @Column()
-    difficulty!: number
+    @Column(
+        {
+            type: 'enum',
+            enum: Difficulties,
+            default: Difficulties.MEDIUM
+        }
+    )
+    difficulty!: Difficulties
     @Column()
     description!: string
     @CreateDateColumn()
     createdAt!: string
+    @Column({nullable: true})
+    updatedAt!: Date
     @Column()
     locomotionType!: number
     @Column()
