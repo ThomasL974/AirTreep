@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { identity } from 'rxjs';
+import { Repository } from 'typeorm';
+import { Travel } from '../travel/entities/travel.entity';
+import { User } from '../user/entities/user.entity';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { UpdateLikeDto } from './dto/update-like.dto';
+import { Like } from './entities/like.entity';
 
 @Injectable()
 export class LikeService {
-  create(createLikeDto: CreateLikeDto) {
-    return 'This action adds a new like';
+
+  constructor(
+    @InjectRepository(Like)
+    private likesRepository: Repository<Like>
+  ) { }
+
+  async create(createLikeDto: CreateLikeDto, userId: User) {
+    const like = new Like()
+    like.liked = createLikeDto.liked
+    like.travel = { id: createLikeDto.travelId } as Travel
+    like.user = userId
+
+    try {
+      await this.likesRepository.save(like)
+      return { message: 'J\'aime' }
+    } catch (error) {
+      return { message: 'Erreur au j\'aime' }
+    }
   }
 
-  findAll() {
-    return `This action returns all like`;
+  async findAll() {
+    return await this.likesRepository.find({ relations: ['travel', 'user'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} like`;
+  async findOne(id: number) {
+    return await this.likesRepository.find({ where: {id}, relations: ['user', 'travel'] });
   }
 
-  update(id: number, updateLikeDto: UpdateLikeDto) {
-    return `This action updates a #${id} like`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} like`;
+  async remove(id: number) {
+    try {
+      await this.likesRepository.delete({id: id})
+      return {message: 'Je n\'aime plus'}
+    } catch (error) {
+      return {message: 'Le like n\'a pas été supprimé'}
+    }
   }
 }

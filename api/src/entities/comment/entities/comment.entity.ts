@@ -10,6 +10,8 @@ export class Comment {
     description!: string
     @CreateDateColumn()
     createdAt!: string
+    @Column({nullable: true})
+    editedAt!: Date
     @ManyToOne(() => User, user => user.comments)
     user!: User
     @ManyToOne(()=>Travel, travel=>travel.comments)

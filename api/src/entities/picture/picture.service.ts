@@ -42,7 +42,7 @@ export class PictureService {
   }
 
   async findOne(id: number) {
-    return await this.picturesRepository.findOneBy({id: id});
+    return await this.picturesRepository.find({where: {id}, relations: ['travel', 'user']});
   }
 
   async update(id: number, updatePictureDto: UpdatePictureDto) {

@@ -12,29 +12,29 @@ export class PictureController {
 
   @UseGuards(new JwtAuthGuard)
   @Post('create')
-  create(@Body() createPictureDto: CreatePictureDto, @CurrentUserId() userId: User) {
-    return this.pictureService.create(createPictureDto, userId);
+  async create(@Body() createPictureDto: CreatePictureDto, @CurrentUserId() userId: User) {
+    return await this.pictureService.create(createPictureDto, userId);
   }
 
   @Get('list')
-  findAll() {
-    return this.pictureService.findAll();
+  async findAll() {
+    return await this.pictureService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.pictureService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.pictureService.findOne(id);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updatePictureDto: UpdatePictureDto) {
-    return this.pictureService.update(id, updatePictureDto);
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updatePictureDto: UpdatePictureDto) {
+    return await this.pictureService.update(id, updatePictureDto);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.pictureService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.pictureService.remove(id);
   }
 }

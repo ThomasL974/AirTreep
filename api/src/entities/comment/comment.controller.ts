@@ -1,4 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { CurrentUserId } from 'src/core/decorators/user.dacorator';
+import { JwtAuthGuard } from 'src/core/guards/jwt-auth.guard';
+import { User } from '../user/entities/user.entity';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -7,28 +10,31 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Post()
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  @UseGuards(new JwtAuthGuard)
+  @Post('create')
+  async create(@Body() createCommentDto: CreateCommentDto, @CurrentUserId() userId: User) {
+    return await this.commentService.create(createCommentDto, userId);
   }
 
-  @Get()
-  findAll() {
-    return this.commentService.findAll();
+  @Get('list')
+  async findAll() {
+    return await this.commentService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.commentService.findOne(id);
   }
 
+  @UseGuards(new JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
-    return this.commentService.update(+id, updateCommentDto);
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateCommentDto: UpdateCommentDto) {
+    return await this.commentService.update(id, updateCommentDto);
   }
 
+  @UseGuards(new JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.commentService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.commentService.remove(id);
   }
 }

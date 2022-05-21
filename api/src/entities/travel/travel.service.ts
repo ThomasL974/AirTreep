@@ -25,16 +25,16 @@ export class TravelService {
     travel.startLocation = createTravelDto.startLocation
     travel.arrivalLocation = createTravelDto.arrivalLocation
     // Check if the user exist
-    if(userId){
-      travel.user = {id : userId} as User
-    }else{
-      return {message: "Un utilisateur est requis pour la création d'un voyage"}
+    if (userId) {
+      travel.user = { id: userId } as User
+    } else {
+      return { message: "Un utilisateur est requis pour la création d'un voyage" }
     }
 
     return await this.travelsRepository.save(travel);
   }
 
-  async findAll() : Promise<Travel[]> {
+  async findAll(): Promise<Travel[]> {
     return await this.travelsRepository.find(
       {
         relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites']
@@ -43,13 +43,13 @@ export class TravelService {
   }
 
   async findOne(id: number) {
-    return await this.travelsRepository.findOneBy({id: id});
+    return await this.travelsRepository.find({ where: { id }, relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites'] });
   }
 
   async update(id: number, updateTravelDto: UpdateTravelDto) {
     const updateDate = new Date()
     // Get travel by id
-    const travel = await this.travelsRepository.findOneBy({id: id})
+    const travel = await this.travelsRepository.findOneBy({ id: id })
     // Update travel
     travel.title = updateTravelDto.title
     travel.difficulty = updateTravelDto.difficulty
@@ -58,22 +58,22 @@ export class TravelService {
     travel.locomotionType = updateTravelDto.locomotionType
     travel.startLocation = updateTravelDto.startLocation
     travel.arrivalLocation = updateTravelDto.arrivalLocation
-    
+
     try {
       await this.travelsRepository.save(travel);
-      return {message: 'Le voyage a été modifié'}
+      return { message: 'Le voyage a été modifié' }
     } catch (error) {
-      return {message: 'Le voyage n\'a pas été modifié'}
+      return { message: 'Le voyage n\'a pas été modifié' }
     }
   }
 
   async remove(id: number) {
-    const travel = await this.travelsRepository.findOneBy({id: id})
+    const travel = await this.travelsRepository.findOneBy({ id: id })
     try {
       await this.travelsRepository.remove(travel);
-      return {message: 'Le voyage a bien été supprimé'}
+      return { message: 'Le voyage a bien été supprimé' }
     } catch (error) {
-      return {message: 'Le voyage n\'a pas été supprimé'}
+      return { message: 'Le voyage n\'a pas été supprimé' }
     }
   }
 }

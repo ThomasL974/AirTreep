@@ -17,25 +17,25 @@ export class TravelController {
 
   @UseGuards(new JwtAuthGuard)
   @Post('create')
-  create(@Body() createTravelDto: CreateTravelDto, @CurrentUserId() userId : User) {
-    return this.travelService.create(createTravelDto, userId);
+  async create(@Body() createTravelDto: CreateTravelDto, @CurrentUserId() userId : User) {
+    return await this.travelService.create(createTravelDto, userId);
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     console.log('test')
-    return this.travelService.findOne(id);
+    return await this.travelService.findOne(id);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateTravelDto: UpdateTravelDto) {
-    return this.travelService.update(id, updateTravelDto);
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateTravelDto: UpdateTravelDto) {
+    return await this.travelService.update(id, updateTravelDto);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.travelService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.travelService.remove(id);
   }
 }
