@@ -1,8 +1,10 @@
-import { AiFillHome, AiFillTrophy } from "react-icons/ai";
-import { RiCompassDiscoverFill, RiDashboardFill } from "react-icons/ri";
+import { AiFillHome, AiFillTrophy, AiFillStar, AiFillHeart } from "react-icons/ai";
+import { RiCompassDiscoverFill, RiDashboardFill, RiAccountPinCircleFill } from "react-icons/ri";
+import { FaPlane } from "react-icons/fa";
+import { MdSpaceDashboard } from "react-icons/md";
 
 export const SidebarDataExternal = [
-    {
+    {   
         title: 'Accueil',
         icon: <AiFillHome />,
         link: '/',
@@ -20,39 +22,34 @@ export const SidebarDataExternal = [
     {
         title: 'Les 4 éléments',
         icon: <RiDashboardFill />,
-        link: '/environment',
+        link: '/ressources',
     },
-    {
-        title: 'Connexion',
-        icon: <RiDashboardFill />,
-        link: '/signin',
-    }
 ]
 
 export const SidebarDataInternal = [
     {
         title: 'Mes voyages',
-        icon: '',
+        icon: <FaPlane />,
         link: '/travels',
-        favourites: {
-            title: 'Favoris',
-            icon: '',
-            link: '/travels/favourites'
-        },
-        liked: {
-            title: 'Aimé',
-            icon: '',
-            link: '/travels/liked'
-        }
     },
     {
-        title: 'Dashboard',
-        icon: '',
-        link: '',
+        title: 'Favoris',
+        icon: <AiFillStar />,
+        link: '/travels/favourites'
     },
     {
-        title: 'Account',
-        icon: '',
-        link: '',
+        title: 'Aimé',
+        icon: <AiFillHeart />,
+        link: '/travels/liked'
+    },
+    {
+        title: 'Tableau de bord',
+        icon: <MdSpaceDashboard />,
+        link: '/dashboard',
+    },
+    {
+        title: 'Compte',
+        icon: <RiAccountPinCircleFill />,
+        link: '/account',
     }
 ]

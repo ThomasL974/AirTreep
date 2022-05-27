@@ -33,7 +33,7 @@ export class TravelController {
     return await this.travelService.update(id, updateTravelDto);
   }
 
-  @UseGuards(new JwtAuthGuard)
+  // @UseGuards(new JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.travelService.remove(id);

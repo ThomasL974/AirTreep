@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { signup } from '../../../services/auth/auth.service'
-import ToastMessage from '../../layout/shared/toast/Toast';
+import { signup } from '../../../core/services/auth/auth.service'
+import { ToastMessage } from '../../layout/shared/toast/Toast';
 
 function FormSignup({ credentials, setCredentials, message, setMessage }) {
 
