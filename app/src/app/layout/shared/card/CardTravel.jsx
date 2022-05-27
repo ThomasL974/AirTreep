@@ -5,8 +5,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { useNavigate } from 'react-router';
-import { getTravel } from '../../../../core/services/travels/travel.service';
 import { NavLink } from 'react-router-dom';
 
 const CardTravel = ({ travel, key, isAuthenticated, handleDelete }) => {

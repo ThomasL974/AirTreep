@@ -31,6 +31,7 @@ const App = () => {
             {/* Ranking instead essentials */}
             <Route exact path='/ranking' element={<Rank />} />
             <Route exact path='/ressources' element={<Ressources />} />
+            <Route exact path='/travels/details/:id' element={<Details />} />
 
             {isAuthenticated &&
               <>
@@ -39,7 +40,6 @@ const App = () => {
                   path='/travels'
                   element={<Travel isAuthenticated={isAuthenticated} travels={travels} setTravels={setTravels}/>}
                 />
-                <Route exact path='/travels/details/:id' element={<Details travels={travels} setTravels={setTravels} />} />
                 <Route exact path='/travels/favourites' element={<Favourites />} />
                 <Route exact path='/travels/liked' element={<Liked />} />
                 <Route exact path='/dashboard' element={<Dashboard />} />

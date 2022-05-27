@@ -12,7 +12,7 @@ const getTravels = (userId = null) => {
 }
 
 const getTravel = (id) => {
-    return axios.get(`${process.env.REACT_APP_API_URL}travels/list/${id}`)
+    return axios.get(`${process.env.REACT_APP_API_URL}travels/${id}`)
         .then(response => response.data)
 }
 
