@@ -15,6 +15,7 @@ const Sidebar = ({ isAuthenticated }) => {
   const dispatch = useDispatch()
   const handleLogout = (e) => {
     dispatch(logout())
+    localStorage.removeItem('accessToken')
     navigate('/signin')
   }
   return (
