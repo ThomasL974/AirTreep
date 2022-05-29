@@ -13,6 +13,7 @@ import Dashboard from './app/pages/dashboard/Dashboard';
 import Account from './app/pages/account/Account';
 import Rank from './app/pages/rank/Rank';
 import Details from './app/pages/travels/Details';
+import FormTravel from './app/pages/travels/FormTravel';
 
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
                   path='/travels'
                   element={<Travel isAuthenticated={isAuthenticated} travels={travels} setTravels={setTravels}/>}
                 />
+                <Route exact path='/travels/create' element={<FormTravel />} />
                 <Route exact path='/travels/favourites' element={<Favourites />} />
                 <Route exact path='/travels/liked' element={<Liked />} />
                 <Route exact path='/dashboard' element={<Dashboard />} />

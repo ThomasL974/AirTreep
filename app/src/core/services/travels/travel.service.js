@@ -1,4 +1,9 @@
 import axios from 'axios';
+import TokenService from '../auth/token/token.service';
+
+const config = {
+    headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }
+};
 
 const getTravels = (userId = null) => {
     return axios.get(`${process.env.REACT_APP_API_URL}travels/list`)
@@ -17,7 +22,7 @@ const getTravel = (id) => {
 }
 
 const createTravel = (credentials) => {
-    return axios.get(`${process.env.REACT_APP_API_URL}travels/create`, credentials)
+    return axios.post(`${process.env.REACT_APP_API_URL}travels/create`, credentials, config)
         .then(response => response.data)
 
 }
@@ -29,7 +34,7 @@ const updateTravel = (credentials, id) => {
 }
 
 const deleteTravel = (id) => {
-    return axios.delete(`${process.env.REACT_APP_API_URL}travels/${id}`)
+    return axios.delete(`${process.env.REACT_APP_API_URL}travels/${id}`, config)
         .then(response => response.data)
 }
 

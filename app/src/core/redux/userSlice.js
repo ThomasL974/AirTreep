@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import TokenService from '../services/auth/token/token.service';
 
 export const userSlice =  createSlice({
     name: "user",
     initialState: {
-        user: null,
+        user: TokenService.getLocalAccessToken ? true : null,
     },
     reducers: {
         login: (state, action) => {
