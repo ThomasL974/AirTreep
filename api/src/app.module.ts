@@ -10,6 +10,7 @@ import { PictureModule } from './entities/picture/picture.module';
 import { FavouritesTravelModule } from './entities/favourites-travel/favourites-travel.module';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 
 require('dotenv').config()
 

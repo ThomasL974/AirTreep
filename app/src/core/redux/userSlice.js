@@ -4,14 +4,17 @@ import TokenService from '../services/auth/token/token.service';
 export const userSlice =  createSlice({
     name: "user",
     initialState: {
-        user: TokenService.getLocalAccessToken ? true : null,
+        user: (state, action) => {
+            state.user = TokenService.getLocalAccessToken() ? action.payload : undefined;
+        },
     },
     reducers: {
         login: (state, action) => {
             state.user = action.payload;
         },
         logout: (state) => {
-            state.user = null;
+            state.user = undefined;
+            TokenService.getLocalAccessToken() && localStorage.removeItem('accessToken');
         },
     },
 });

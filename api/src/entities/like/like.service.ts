@@ -34,11 +34,11 @@ export class LikeService {
     return await this.likesRepository.find({ relations: ['travel', 'user'] });
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await this.likesRepository.find({ where: {id}, relations: ['user', 'travel'] });
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       await this.likesRepository.delete({id: id})
       return {message: 'Je n\'aime plus'}

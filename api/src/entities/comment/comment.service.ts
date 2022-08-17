@@ -32,11 +32,11 @@ export class CommentService {
     return await this.commentsRepository.find({relations: ['travel', 'user']});
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return await this.commentsRepository.find({where : {id}, relations: ['travel', 'user']});
   }
 
-  async update(id: number, updateCommentDto: UpdateCommentDto) {
+  async update(id: string, updateCommentDto: UpdateCommentDto) {
     const comment = await this.commentsRepository.findOneBy({id: id})
     comment.description = updateCommentDto.description
     comment.editedAt = new Date()
@@ -48,7 +48,7 @@ export class CommentService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       await this.commentsRepository.delete(id)
       return {message: 'Commentaire supprimé'}

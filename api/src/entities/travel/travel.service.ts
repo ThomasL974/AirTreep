@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
@@ -34,22 +34,51 @@ export class TravelService {
     return await this.travelsRepository.save(travel);
   }
 
-  async findAll(): Promise<Travel[]> {
-    return await this.travelsRepository.find(
-      {
-        relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites']
+  async findAll(queries): Promise<Travel[]> {
+
+    let where = {};
+    try {
+      if(queries){
+        where = { ...queries };
+        return await this.travelsRepository.find(
+          {
+            where : where,
+            relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites']
+          }
+        )
+      }else{
+        return await this.travelsRepository.find(
+          {
+            relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites']
+          }
+        )
       }
-    )
+    } catch (error) {
+      throw new HttpException('not good credentials', 400);
+    }
   }
 
-  async findOne(id: number) {
+  async findAllByUserId(userId): Promise<Travel[]> {
+    return await this.travelsRepository.find({
+      where: {
+        user: { id: userId },
+      },
+      relations: ['user'],
+    });
+  }
+
+  async findOne(id: string): Promise<Travel[]> {
     return await this.travelsRepository.find({ where: { id }, relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites'] });
   }
 
-  async update(id: number, updateTravelDto: UpdateTravelDto) {
+  async update(id: string, updateTravelDto: UpdateTravelDto, userId) {
     const updateDate = new Date()
     // Get travel by id
-    const travel = await this.travelsRepository.findOneBy({ id: id })
+    const travel = await this.travelsRepository.findOne({ where: { id }, relations: ['user'] })
+
+    if (travel.user.id !== userId) {
+      throw new UnauthorizedException();
+    }
     // Update travel
     travel.title = updateTravelDto.title
     travel.difficulty = updateTravelDto.difficulty
@@ -67,8 +96,11 @@ export class TravelService {
     }
   }
 
-  async remove(id: number) {
-    const travel = await this.travelsRepository.findOneBy({ id: id })
+  async remove(id: string, userId) {
+    const travel = await this.travelsRepository.findOne({ where: { id: id }, relations: ['user'] },)
+    if (travel.user.id !== userId) {
+      throw new UnauthorizedException();
+    }
     try {
       await this.travelsRepository.remove(travel);
       return { message: 'Le voyage a bien été supprimé' }

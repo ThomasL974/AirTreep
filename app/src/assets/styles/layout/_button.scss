@@ -1,0 +1,37 @@
+a{
+    text-decoration: none;
+}
+.btn{
+    height: auto;
+    padding: .5rem;
+    border-radius: 5px;
+    border: 1px solid $blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $white;
+    gap: 10px;
+    transition: background-color .2s linear;
+    
+    svg{
+        fill: $blue;
+        transition: fill .2s linear;
+    }
+
+    span{
+        color: $blue;
+        transition: color .2s linear;
+    }
+
+    &:hover{
+        background-color: $blue;
+    }
+
+    &:hover span {
+        color: white;
+    }
+
+    &:hover svg {
+        fill: white;
+    }
+}

@@ -18,14 +18,14 @@ const Discover = ({ travels, setTravels }) => {
         fetchTravels();
     }, [])
     return (
-        <>
-            <h1>Liste des voyages</h1>
+        <div className="discover">
             <div className="travels">
                 {_.map(travels, (travel, key) => (
-                    <CardTravel travel={travel} key={key}/>
+                    <CardTravel travel={travel} key={key} />
                 ))}
             </div>
-        </>
+        </div>
+
     )
 }
 

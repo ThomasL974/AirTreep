@@ -4,8 +4,8 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 
 @Entity()
 export class Comment {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn('uuid')
+    id!: string
     @Column()
     description!: string
     @CreateDateColumn()

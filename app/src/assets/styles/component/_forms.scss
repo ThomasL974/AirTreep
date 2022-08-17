@@ -2,14 +2,124 @@
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
     align-items: center;
+    position: relative;
+    opacity: 0;
 
-    .conection,
-    .register {
+    .signin,
+    .signup {
+        width: 100%;
+        height: 100%;
+        padding: 10rem 25rem;
         &__form {
             display: flex;
             flex-direction: column;
+            gap: 10px;
+            margin-top: 2rem;
+
+            input{
+                width: 100%;
+                height: 40px;
+                padding: 0 1rem;
+                border-radius: 5px;
+                border: none;
+                background-color: #f2f1f2;
+                font-family: 'Metropolis-medium', sans-serif;
+            }
+
+            textarea{
+                max-width: 100%;
+                min-width: 100%;
+                height: auto;
+                padding: 1rem;
+                border-radius: 5px;
+                border: none;
+                background-color: #f2f1f2;
+                font-family: 'Metropolis-medium', sans-serif;
+            }
+
+            .btn-send{
+                background-color: $success;
+                color: #f2f1f2;
+                cursor: pointer;
+                transition: opacity .2s linear;
+                &:hover{
+                    opacity: .7;
+                }
+            }
+        }
+
+        &__register{
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 20px;
+            p{
+                width: 100%;
+                text-align: center;
+            }
+
+            button{
+                width: 100%;
+                padding: .9rem 0;
+                text-align: center;
+                color: black;
+                cursor: pointer;
+                border-radius: 5px;
+                border: none;
+                background-color: #fff;
+                box-shadow: 0px 0px 5px -2px #000000;
+                transition: all .2s linear;
+
+                &:hover{
+                    background-color: $blue;
+                    color: #fff;
+                }
+            }
+        }
+
+        .forgot{
+            width: 100%;
+            padding: 1.5rem;
+            text-align: center;
+            a{
+                text-decoration: none;
+                color: #c7c7c7;
+                cursor: pointer;
+            }
+        }
+
+        h1{
+            font-family: 'Metropolis-bold', sans-serif;
+            text-align: center;
+        }
+
+        &__backIcon{
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #738a90;
+            cursor: pointer;
+            transition: color .2s linear;
+
+            svg{
+                transform: scale(1.5);
+            }
+            &:hover{
+                color: $blue;
+            }
+        }
+
+        &__first-last{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
             gap: 10px;
         }
     }
@@ -23,5 +133,18 @@
         flex-direction: column;
         justify-content: space-around;
         height: 100%;
+
+        // Display none forced
+        input[value=""].react-mapbox-ac-input + span > div{
+            display: none !important;
+        }
+    }
+
+    &__content{
+        width: 50%;
+        min-width: 500px;
+        padding: 1rem;
+        border: 1px solid #738a90;
+        border-radius: 10px;
     }
 }

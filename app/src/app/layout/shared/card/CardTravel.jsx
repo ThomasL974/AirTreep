@@ -1,19 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import test from '../../../../assets/images/test.jpg';
 import { NavLink } from 'react-router-dom';
+import ConfirmModal from '../confirmModal/ConfirmModal';
 
-const CardTravel = ({ travel, key, isAuthenticated, handleDelete }) => {
+const CardTravel = ({ travel, isAuthenticated, open, setOpen, handleDelete }) => {
+    const [infos, setInfos] = useState({});
+    const handleOpen = () => {
+        setInfos({
+            title: 'Supprimer un voyage',
+            description: `Voulez-vous vraiment supprimer le voyage : ${travel.title} ?`
+        })
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
-        <Card key={key} className="travels__card" sx={{ width: 345 }}>
+        <Card className="travels__card" sx={{ width: 347 }}>
             <CardMedia
                 component="img"
-                height="140"
-                image="app/src/assets/images/test.jpg"
+                height="200"
+                image={test}
                 alt="image de test"
             />
             <CardContent>
@@ -25,11 +39,23 @@ const CardTravel = ({ travel, key, isAuthenticated, handleDelete }) => {
                 </Typography>
             </CardContent>
             <CardActions>
-                <NavLink to={'/travels/details/'+travel.id}>
+                <NavLink to={'/travels/details/' + travel.id}>
                     <Button size="small" >Plus de détails</Button>
                 </NavLink>
                 {isAuthenticated &&
-                    <Button size="small" onClick={() => handleDelete(travel.id)}>Supprimer</Button>
+                    <>
+                        <Button size="small" onClick={handleOpen}>Supprimer</Button>
+                        <NavLink to={'/travels/update/' + travel.id}>
+                            <Button size="small" >Mise à jour</Button>
+                        </NavLink>
+                        <ConfirmModal
+                            handleClose={handleClose}
+                            handleDelete={handleDelete}
+                            travel={travel}
+                            open={open}
+                            infos={infos}>
+                        </ConfirmModal>
+                    </>
                 }
             </CardActions>
         </Card>

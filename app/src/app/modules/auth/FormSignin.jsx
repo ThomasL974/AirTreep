@@ -6,17 +6,21 @@ import { login } from '../../../core/redux/userSlice';
 import { useNavigate } from 'react-router';
 import TokenService from '../../../core/services/auth/token/token.service';
 
-function FormSignin({ credentials, setCredentials, message, setMessage }) {
+function FormSignin({ credentials, setCredentials, toast, setToast, setRegister }) {
 
   const [open, setOpen] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+  const displayRegister = () => {
+      setRegister(false);
+  }
+
   const handleClick = () => {
     setOpen(true);
   };
 
-  const handleClose = (event, reason) => {
+  const handleClose = (reason) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -33,6 +37,7 @@ function FormSignin({ credentials, setCredentials, message, setMessage }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
 
       await singin(credentials)
@@ -44,25 +49,41 @@ function FormSignin({ credentials, setCredentials, message, setMessage }) {
         userData: JSON.parse(atob(localToken.split('.')[1]))
       }))
 
-      setMessage('Vous êtes connecté')
+      setToast({
+        message: 'Vous êtes connecté',
+        severity: 'success'
+      })
 
       handleClick()
 
-      navigate('/discover')
+      setTimeout(()=>{
+        navigate('/travels')
+      }, 1000)
     } catch (error) {
-      console.log(error)
+      setToast({
+        message: 'Email ou mot de passe incorrect',
+        severity: 'error'
+      })
+      handleClick()
     }
   }
 
   return (
-    <div className="conection">
-      <ToastMessage open={open} handleClose={handleClose} message={message}></ToastMessage>
-      <h1>Connexion</h1>
-      <form className="conection__form" onSubmit={handleSubmit} action="">
-        <input type="email" name="email" className="conection__form-email" placeholder="Email" onChange={handleChange} />
-        <input type="password" name="password" className="conection__form-password" placeholder="Password" onChange={handleChange} />
-        <input type="submit" value="Send" className="conection__form-send btn btn-send" />
+    <div className="signin">
+      <h1>Se connecter</h1>
+      <form className="signin__form" onSubmit={handleSubmit}>
+        <input type="email" name="email" className="signin__form-email" placeholder="E-mail" onChange={handleChange} />
+        <input type="password" name="password" className="signin__form-password" placeholder="Mot de passe" onChange={handleChange} />
+        <input type="submit" value="Se connecter" className="signin__form-send btn btn-send" />
       </form>
+      <div className="forgot">
+        <a href="/#">Mot de passe oublié ?</a>
+      </div>
+      <div className="signin__register">
+        <p>Pas de compte ?</p>
+        <button onClick={displayRegister}>Créer un compte</button>
+      </div>
+      <ToastMessage open={open} handleClose={handleClose} toast={toast}></ToastMessage>
     </div>
   )
 }

@@ -7,26 +7,31 @@ import { BiLogOut } from "react-icons/bi";
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../core/redux/userSlice';
+import { RiAccountPinCircleFill } from 'react-icons/ri';
+import logo from '../../../assets/images/logo/logo.png';
 
-const Sidebar = ({ isAuthenticated }) => {
-  // Open menu
-  // const [sidebar, setSidebar] = useState(true);
+const Sidebar = ({ userInfos, isAuthenticated, setIsAuthenticated }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
   const handleLogout = (e) => {
-    dispatch(logout())
-    localStorage.removeItem('accessToken')
-    navigate('/signin')
+    setIsAuthenticated(false);
+    dispatch(logout());
+    navigate('/auth');
   }
   return (
     <div className="sidebar">
+      <div className={`sidebar__logo ${isAuthenticated && 'circle'}`}>
+        <img src={logo} width="80" alt="Logo" />
+      </div>
       <div className="sidebar__external">
+        <span className="sidebar__title-external">Menu</span>
         <ul className="sidebar__nav-menu-items">
 
           {/* Iterate link from sidebarData */}
           {_.map(SidebarDataExternal, (value, key) => (
-            <li className="sidebar__nav-menu_item" key={key}>
-              <NavLink to={value.link} activeClassName="selected">
+            <li className="sidebar__nav-menu-item" key={key}>
+              <NavLink to={value.link}>
                 {value.icon}
                 <span>{value.title}</span>
               </NavLink>
@@ -36,12 +41,13 @@ const Sidebar = ({ isAuthenticated }) => {
       </div>
       {isAuthenticated &&
         <div className="sidebar__internal">
+          <span className="sidebar__title-internal">Utilisateur</span>
           <ul className="sidebar__nav-menu-items">
 
             {/* Iterate link from sidebarData */}
             {_.map(SidebarDataInternal, (value, key) => (
-              <li className="sidebar__nav-menu_item" key={key}>
-                <NavLink to={value.link} activeClassName="selected">
+              <li className="sidebar__nav-menu-item" key={key}>
+                <NavLink to={value.link}>
                   {value.icon}
                   <span>{value.title}</span>
                 </NavLink>
@@ -50,21 +56,29 @@ const Sidebar = ({ isAuthenticated }) => {
           </ul>
         </div>
       }
-      {!isAuthenticated ?
-        <div className="sidebar__cta">
-          <NavLink to="/signin" activeClassName="selected">
-            <BsFillShieldLockFill />
-            <span>Connexion</span>
-          </NavLink>
-        </div>
-        :
-        <div className="sidebar__cta">
-          <NavLink to="/signin" onClick={(e)=>handleLogout()}>
-            <BiLogOut />
-            <span>Deconnexion</span> 
-          </NavLink>
-        </div>
-      }
+      <div className="sidebar__bottom-cta">
+        {!isAuthenticated ?
+          <div className="sidebar__cta">
+            <NavLink to="/auth">
+              <BsFillShieldLockFill />
+              <span>Connexion</span>
+            </NavLink>
+          </div>
+          :
+          <div className="sidebar__cta">
+            <li className="sidebar__nav-menu-item">
+              <NavLink to={'/account'} className="sidebar__connect">
+                <RiAccountPinCircleFill />
+                <span>{userInfos.firstName} {userInfos.lastName}</span>
+              </NavLink>
+            </li>
+            <NavLink className="sidebar__disconnect" to="/auth" onClick={(e) => handleLogout()}>
+              <BiLogOut />
+              <span>Deconnexion</span>
+            </NavLink>
+          </div>
+        }
+      </div>
     </div>
   )
 }

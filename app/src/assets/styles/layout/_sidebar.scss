@@ -1,6 +1,152 @@
-.sidebar{
-    width: 250px;
+.sidebar {
+    min-width: 250px;
     height: 100vh;
-    background-color: red;
+    background-color: #fafafa;
     overflow: hidden;
+    font-family: "Metropolis-light", sans-serif;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        width: 1px;
+        height: 100%;
+        background-color: #738a90;
+        right: 0;
+        opacity: 0.1;
+    }
+
+    &__logo {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .circle{
+        &::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff3756;
+            top: 27px;
+            left: 45%;
+            border-radius: 50%;
+            opacity: 0;
+            animation: logoOpacity 2s linear infinite;
+        }
+    }
+
+    &__external {
+        padding: 0 0 2rem 0;
+    }
+
+    &__title-external {
+        color: #2f2f2f;
+        padding: 0 0 0 1.5rem;
+        font-family: "Metropolis-medium", sans-serif;
+    }
+
+    &__title-internal {
+        color: #2f2f2f;
+        padding: 0 0 0 1.5rem;
+        font-family: "Metropolis-medium", sans-serif;
+    }
+
+    &__nav-menu-items {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0 0 1.5rem;
+    }
+
+    &__nav-menu-item {
+        list-style: none;
+        & > a {
+            text-decoration: none;
+            color: $fontColor;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            transition: color 0.2s linear;
+            cursor: pointer;
+
+            &:hover {
+                color: $success;
+            }
+
+            > svg {
+                margin: 0 0.5rem 0 0;
+            }
+        }
+    }
+    &__bottom-cta {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        padding: 0 0 1.5rem 1.5rem;
+    }
+    &__cta {
+        align-self: flex-end;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        & > a {
+            text-decoration: none;
+            color: $fontColor;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            transition: color 0.2s linear;
+
+            > svg {
+                margin: 0 0.5rem 0 0;
+            }
+        }
+    }
+
+    &__disconnect {
+        &:hover {
+            color: $danger;
+        }
+    }
+
+    &__connect {
+        &:hover {
+            color: $success;
+        }
+    }
+}
+
+.active {
+    color: $success !important;
+    position: relative;
+
+    &::before {
+        content: "";
+        width: 4px;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        background-color: $success;
+        border-top-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+    }
+}
+
+@keyframes logoOpacity {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }

@@ -1,5 +1,5 @@
 import { AiFillHome, AiFillTrophy, AiFillStar, AiFillHeart } from "react-icons/ai";
-import { RiCompassDiscoverFill, RiDashboardFill, RiAccountPinCircleFill } from "react-icons/ri";
+import { RiCompassDiscoverFill, RiDashboardFill } from "react-icons/ri";
 import { FaPlane } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 
@@ -35,21 +35,16 @@ export const SidebarDataInternal = [
     {
         title: 'Favoris',
         icon: <AiFillStar />,
-        link: '/travels/favourites'
+        link: '/favourites'
     },
     {
         title: 'Aimé',
         icon: <AiFillHeart />,
-        link: '/travels/liked'
+        link: '/liked'
     },
     {
         title: 'Tableau de bord',
         icon: <MdSpaceDashboard />,
         link: '/dashboard',
     },
-    {
-        title: 'Compte',
-        icon: <RiAccountPinCircleFill />,
-        link: '/account',
-    }
 ]

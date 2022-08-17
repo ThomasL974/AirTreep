@@ -7,13 +7,13 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const ToastMessage = ({ open, handleClose, message }) => {
+const ToastMessage = ({ open, handleClose, toast }) => {
 
     return (
         <Stack spacing={2} sx={{ width: '100%' }}>
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                    {message}
+                <Alert onClose={handleClose} severity={toast.severity} sx={{ width: '100%' }}>
+                    {toast.message}
                 </Alert>
             </Snackbar>
         </Stack>

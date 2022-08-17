@@ -1,8 +1,15 @@
 // Reset
 @import './assets/styles/reset';
+// Config
+@import './assets/styles/config/fonts';
+@import './assets/styles/config/variables';
 // Layout
 @import './assets/styles/layout/sidebar';
 @import './assets/styles/layout/content';
+@import './assets/styles/layout/toast';
+@import './assets/styles/layout/confirmModal';
+@import './assets/styles/layout/topbar';
+@import './assets/styles/layout/button';
 // Component
 @import './assets/styles/component/travels';
 @import './assets/styles/component/forms';

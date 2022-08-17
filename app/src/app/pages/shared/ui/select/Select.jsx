@@ -16,10 +16,9 @@ const SelectList = ({label, dataOptions, nameOption, locomotion, handleChange}) 
                     labelId="select"
                     id="select"
                     value={locomotion}
-                    name={nameOption}
-                    label={label}
+                    defaultValue={locomotion}
                     onChange={handleChange}
-                    defaultValue={dataOptions[0].value}
+                    name={nameOption}
                 >
                     {_.map(dataOptions, (value, key)=>(
                         <MenuItem key={key} value={value.id}>{value.value}</MenuItem>

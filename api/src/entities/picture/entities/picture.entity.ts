@@ -4,14 +4,16 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 
 @Entity()
 export class Picture {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn('uuid')
+    id!: string
     @Column()
-    location!: string
+    fileName!: string
+    @Column({
+        type: 'bytea',
+    })
+    data!: Uint8Array
     @Column()
-    title!: string
-    @Column()
-    urlImg!: string
+    mimeType!: string
     @CreateDateColumn()
     createdAt!: string
     @ManyToOne(() => Travel, travel => travel.pictures)

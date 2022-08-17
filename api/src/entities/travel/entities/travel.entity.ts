@@ -5,22 +5,23 @@ import { Picture } from "src/entities/picture/entities/picture.entity";
 import { Tag } from "src/entities/tag/entities/tag.entity";
 import { User } from "src/entities/user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Difficulties } from "../enums/travel.enum";
+// import { Difficulties } from "../enums/travel.enum";
 
 @Entity()
 export class Travel {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn('uuid')
+    id!: string
     @Column()
     title!: string
     @Column(
-        {
-            type: 'enum',
-            enum: Difficulties,
-            default: Difficulties.MEDIUM
-        }
+        // {
+        //     type: 'enum',
+        //     enum: Difficulties,
+        //     default: Difficulties.MEDIUM
+        // }
+        {nullable: true}
     )
-    difficulty!: Difficulties
+    difficulty!: string
     @Column()
     description!: string
     @CreateDateColumn()
@@ -33,7 +34,7 @@ export class Travel {
     startLocation!: string
     @Column()
     arrivalLocation!: string
-    @OneToMany(() => Picture, picture => picture.travel)
+    @OneToMany(() => Picture, picture => picture.travel, {nullable: true})
     pictures!: Picture[]
     @ManyToOne(() => User, user => user.travels)
     user!: User

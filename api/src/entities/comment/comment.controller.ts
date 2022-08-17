@@ -22,19 +22,19 @@ export class CommentController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     return await this.commentService.findOne(id);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() updateCommentDto: UpdateCommentDto) {
+  async update(@Param('id') id: string, @Body() updateCommentDto: UpdateCommentDto) {
     return await this.commentService.update(id, updateCommentDto);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     return await this.commentService.remove(id);
   }
 }

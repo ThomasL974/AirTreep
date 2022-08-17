@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { IsEmail } from "class-validator";
 import { Comment } from "src/entities/comment/entities/comment.entity";
 import { FavouritesTravel } from "src/entities/favourites-travel/entities/favourites-travel.entity";
@@ -8,26 +9,26 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } f
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id!: number
+    @PrimaryGeneratedColumn('uuid')
+    id!: string
     @Column({ unique: true })
-    @IsEmail({ message: 'L\'email n\'est pas correct' })
+    @IsEmail()
     email!: string
     @Column()
     password!: string
     @CreateDateColumn()
     createdAt!: string
-    @Column({nullable: true})
+    @Column({ nullable: true })
     firstName!: string
-    @Column({nullable: true})
+    @Column({ nullable: true })
     lastName!: string
-    @Column({nullable: true})
+    @Column({ nullable: true })
     description!: string
-    @Column({ type: 'date', nullable: true})
+    @Column({ type: 'date', nullable: true })
     birthday!: string
-    @Column({nullable: true})
+    @Column({ nullable: true })
     profilImg!: string
-    @Column({nullable: true})
+    @Column({ nullable: true })
     pseudo!: string
     @OneToMany(() => Comment, comment => comment.user)
     comments!: Comment[]
@@ -37,6 +38,6 @@ export class User {
     travels!: Travel[]
     @OneToMany(() => FavouritesTravel, favouriteTravel => favouriteTravel.user)
     favourites!: FavouritesTravel[]
-    @OneToMany(() => Picture, picture => picture.user)
+    @OneToMany(() => Picture, picture => picture.user, { nullable: true })
     pictures!: Picture[]
 }

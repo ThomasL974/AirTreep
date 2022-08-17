@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Travel } from '../travel/entities/travel.entity';
@@ -15,56 +15,53 @@ export class PictureService {
     private picturesRepository: Repository<Picture>
   ) { }
 
-  async create(createPictureDto: CreatePictureDto, userId: User) {
-    const picture = new Picture()
-    const travelId = createPictureDto.travelId
-    picture.title = createPictureDto.title
-    picture.location = createPictureDto.location
-    picture.urlImg = createPictureDto.urlImg
+  async uploadFile(createPictureDto: CreatePictureDto, userId: User, dataBuffer: Buffer, filename: string, mymeType: string) {
     
-    if(travelId){
-      picture.travel = {id : travelId} as Travel
-    }
+    // const travelId = createPictureDto.travelId;
 
-    if(userId){
-      picture.user = userId
-    }
+    const picture = await this.picturesRepository.create({
+      mimeType: mymeType,
+      fileName: filename,
+      data: dataBuffer,
+      user: userId,
+    })
+
     
+
     try {
       return await this.picturesRepository.save(picture)
     } catch (error) {
-      return {message: 'L\'image n\'a pas était créée'}
+      return { success: 'true', message: error.message }
     }
   }
 
   async findAll() {
-    return await this.picturesRepository.find({relations : ['travel', 'user']});
+    return await this.picturesRepository.find({ relations: ['travel', 'user'] });
   }
 
-  async findOne(id: number) {
-    return await this.picturesRepository.find({where: {id}, relations: ['travel', 'user']});
+  async getFileById(id: string) {
+    return await this.picturesRepository.findOne({ where: { id: id } });
   }
 
-  async update(id: number, updatePictureDto: UpdatePictureDto) {
-    const picture = await this.picturesRepository.findOneBy({id: id})
-    picture.title = updatePictureDto.title
-    picture.location = updatePictureDto.location
-    picture.urlImg = updatePictureDto.urlImg
+  async update(id: string, updatePictureDto: UpdatePictureDto) {
+    const picture = await this.picturesRepository.findOne({ where: { id: id } })
+    picture.fileName = updatePictureDto.title
+    // picture.attachFile = updatePictureDto.urlImg
 
     try {
       await this.picturesRepository.save(picture)
-      return {message: 'L\'image a bien été modifié'}
+      return { message: 'L\'image a bien été modifié' }
     } catch (error) {
-      return {message: 'L\'image n\'a pas été modifié'}
+      return { message: 'L\'image n\'a pas été modifié' }
     }
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
-      await this.picturesRepository.delete({id: id})
-      return {message: 'L\'image a bien été supprimé'}
+      await this.picturesRepository.delete({ id: id })
+      return { message: 'L\'image a bien été supprimé' }
     } catch (error) {
-      return {message: 'L\'image n\'a pas été supprimé'}
+      return { message: 'L\'image n\'a pas été supprimé' }
     }
   }
 }

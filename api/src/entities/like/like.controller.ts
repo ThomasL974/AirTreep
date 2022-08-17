@@ -22,13 +22,13 @@ export class LikeController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     return await this.likeService.findOne(id);
   }
 
   @UseGuards(new JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(@Param('id') id: string) {
     return await this.likeService.remove(id);
   }
 }

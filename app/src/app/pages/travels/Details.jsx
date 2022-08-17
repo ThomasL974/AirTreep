@@ -9,7 +9,6 @@ const Details = () => {
     const getTravelById = async (id) => {
         try {
             const travel = await getTravel(id)
-            console.log(travel)
             setTravel(travel[0])
         } catch (error) {
             console.log(error)

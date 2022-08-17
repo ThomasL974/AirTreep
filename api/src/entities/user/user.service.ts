@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as argon2 from 'argon2';
 import { sign } from 'jsonwebtoken';
@@ -39,7 +39,21 @@ export class UserService {
   // Create User account
   async register(createUserAccountDto: CreateUserAccountDto) {
     const user = new User()
+
+    // format firtsname
+    let upperCaseFirstLetter = createUserAccountDto.firstName.split('');
+    upperCaseFirstLetter = upperCaseFirstLetter.map((value, key) => {
+      if(key === 0){
+        return value.toUpperCase();
+      }
+      return value
+    })
+    
     // Set user informations
+    user.firstName = upperCaseFirstLetter.join('');
+    user.lastName = createUserAccountDto.lastName.toUpperCase()
+    user.description = createUserAccountDto.description
+    user.pseudo = createUserAccountDto.pseudo
     user.email = createUserAccountDto.email.toLowerCase()
 
     const hashedPassword = await argon2.hash(createUserAccountDto.password)
@@ -48,7 +62,19 @@ export class UserService {
     try {
       await this.userRepository.save(user)
     } catch (error) {
-      return {message: 'Account already exist!'}
+      return { message: 'Account already exist!' }
+    }
+  }
+
+  async getUserInfo(userId) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if(user.id !== userId){
+      throw new UnauthorizedException();
+    }
+    try {
+      return user;
+    } catch (error) {
+      throw new HttpException("not good user", 204);
     }
   }
 }

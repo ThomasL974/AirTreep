@@ -1,6 +1,11 @@
-.content{
+.content-left{
     width: 100%;
-    height: auto;
-    overflow-y: scroll;
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    .content{
+        width: 100%;
+        height: 100%;
+        overflow-y: scroll;
+        padding: 1rem;
+    }
 }

@@ -1,19 +1,14 @@
 import axios from 'axios';
 import TokenService from '../auth/token/token.service';
 
-const config = {
-    headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }
-};
-
-const getTravels = (userId = null) => {
+const getTravels = () => {
     return axios.get(`${process.env.REACT_APP_API_URL}travels/list`)
-        .then(response => {
-            if (userId) {
-                return response.data.filter((value, key) => value.user.id === userId)
-            } else {
-                return response.data
-            }
-        })
+        .then(response => response.data)
+}
+
+const getTravelsByUserId = () => {
+    return axios.get(`${process.env.REACT_APP_API_URL}travels/list/mts`, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
+        .then(response => response.data)
 }
 
 const getTravel = (id) => {
@@ -22,19 +17,19 @@ const getTravel = (id) => {
 }
 
 const createTravel = (credentials) => {
-    return axios.post(`${process.env.REACT_APP_API_URL}travels/create`, credentials, config)
+    return axios.post(`${process.env.REACT_APP_API_URL}travels/create`, credentials, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
         .then(response => response.data)
 
 }
 
 const updateTravel = (credentials, id) => {
-    return axios.patch(`${process.env.REACT_APP_API_URL}travels/${id}`, credentials)
+    return axios.patch(`${process.env.REACT_APP_API_URL}travels/${id}`, credentials, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
         .then(response => response.data)
 
 }
 
 const deleteTravel = (id) => {
-    return axios.delete(`${process.env.REACT_APP_API_URL}travels/${id}`, config)
+    return axios.delete(`${process.env.REACT_APP_API_URL}travels/${id}`, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
         .then(response => response.data)
 }
 
@@ -43,5 +38,6 @@ export {
     getTravel,
     createTravel,
     updateTravel,
-    deleteTravel
+    deleteTravel,
+    getTravelsByUserId
 }
