@@ -11,11 +11,11 @@ import Dashboard from './app/pages/dashboard/Dashboard';
 import Account from './app/pages/account/Account';
 import Rank from './app/pages/rank/Rank';
 import Details from './app/pages/travels/Details';
-import FormTravel from './app/pages/travels/FormTravel';
 import TokenService from './core/services/auth/token/token.service';
 import { getUserInfos } from './core/services/user/user.service';
 import TopBar from './app/layout/topBar/TopBar';
 import FormsSign from './app/modules/auth/FormsSign';
+import { FormTravel } from './app/layout/forms/Forms';
 
 
 const App = () => {

@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { singin } from '../../../core/services/auth/auth.service';
 import { ToastMessage } from '../../layout/shared/toast/Toast';
 import { useDispatch } from 'react-redux';
 import { login } from '../../../core/redux/userSlice';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import TokenService from '../../../core/services/auth/token/token.service';
 import { signup } from '../../../core/services/auth/auth.service'
 import { ImArrowLeft2 } from "react-icons/im";
+import { Button, TextField } from '@mui/material'
+import { createTravel, getTravel, updateTravel } from '../../../core/services/travels/travel.service'
+import MapboxAutocomplete from "react-mapbox-autocomplete";
 
 export const FormSignin = ({ credentials, setCredentials, toast, setToast, setRegister }) => {
 
@@ -160,3 +163,78 @@ export const FormSignup = ({ credentials, setCredentials, toast, setToast, setRe
         </div>
     )
 }
+
+export const FormTravel = () => {
+
+    const [credentials, setCredentials] = useState({})
+    const travelId = useParams('id').id;
+    const navigate = useNavigate()
+
+    const mapAccess = {
+        mapboxApiAccessToken:
+            process.env.REACT_APP_MAP_BOX_TOKEN
+    };
+
+    const _suggestionSelect = (result, lat, long, text) => {
+        console.log(result);
+    }
+
+    const fetchTravel = async () => {
+        if (travelId) {
+            try {
+                const data = await getTravel(travelId)
+                setCredentials(data[0])
+            } catch (error) {
+                console.log(error)
+            }
+        } else {
+            return;
+        }
+    }
+
+    const handleChange = (e) => {
+        setCredentials({
+            ...credentials,
+            [e.target.name]: e.target.value
+        })
+
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            travelId ? await updateTravel(credentials, travelId) : await createTravel(credentials)
+            navigate('/travels')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchTravel();
+    }, [])
+
+    return (
+        <div className="form-travel">
+            <h1>Création d'un voyage</h1>
+            <div className="form-travel__content">
+                <form onSubmit={handleSubmit}>
+                    <TextField value={credentials.title} id="outlined-basic" name="title" label="Titre" variant="outlined" onChange={handleChange} />
+                    <TextField value={credentials.description} id="outlined-basic" name="description" label="Description" variant="outlined" onChange={handleChange} />
+                    <TextField value={credentials.startLocation} id="outlined-basic" name="startLocation" label="Départ" variant="outlined" onChange={handleChange} />
+                    <TextField value={credentials.arrivalLocation} id="outlined-basic" name="arrivalLocation" label="Arrivé" variant="outlined" onChange={handleChange} />
+                    <MapboxAutocomplete
+                        publicKey={mapAccess.mapboxApiAccessToken}
+                        inputClass="form-control search"
+                        onSuggestionSelect={_suggestionSelect}
+                        country="fr"
+                        resetSearch={false}
+                        placeholder="Rechercher un lieu..."
+                    />
+                    <Button type="submit" variant="contained">Envoyer</Button>
+                </form>
+            </div>
+        </div>
+    )
+}
+
