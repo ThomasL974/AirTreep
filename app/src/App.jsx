@@ -3,7 +3,6 @@ import Home from './app/pages/home/Home';
 import Sidebar from './app/layout/sidebar/Sidebar';
 import Discover from './app/pages/discover/Discover';
 import { useEffect, useState } from 'react';
-import Forms from './app/modules/auth/Forms';
 import Travel from './app/pages/travels/Travel';
 import Ressources from './app/pages/ressources/Ressources';
 import Favourites from './app/pages/favourites/Favourites';
@@ -16,6 +15,7 @@ import FormTravel from './app/pages/travels/FormTravel';
 import TokenService from './core/services/auth/token/token.service';
 import { getUserInfos } from './core/services/user/user.service';
 import TopBar from './app/layout/topBar/TopBar';
+import FormsSign from './app/modules/auth/FormsSign';
 
 
 const App = () => {
@@ -61,7 +61,7 @@ const App = () => {
           <div className="content">
             <Routes>
               <Route path='/' element={<Home />} />
-              <Route exact path='/auth' userInfos={userInfos} setUserInfos={setUserInfos} element={<Forms />} />
+              <Route exact path='/auth' userInfos={userInfos} setUserInfos={setUserInfos} element={<FormsSign />} />
               <Route exact path='/discover' element={<Discover travels={travels} setTravels={setTravels} />} />
               {/* Ranking instead essentials */}
               <Route exact path='/ranking' element={<Rank />} />

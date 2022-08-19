@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import FormSignin from './FormSignin'
-import FormSignup from './FormSignup'
+import { FormSignin, FormSignup } from '../../layout/forms/Forms';
 import { revealFormOpacity } from './animation';
 
 function Forms({ userInfos, setUserInfos }) {
