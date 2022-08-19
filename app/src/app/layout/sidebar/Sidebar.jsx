@@ -25,7 +25,7 @@ const Sidebar = ({ userInfos, isAuthenticated, setIsAuthenticated }) => {
         <img src={logo} width="80" alt="Logo" />
       </div>
       <div className="sidebar__external">
-        <span className="sidebar__title-external">Menu</span>
+        <span className="sidebar__title-external">Airtreep</span>
         <ul className="sidebar__nav-menu-items">
 
           {/* Iterate link from sidebarData */}

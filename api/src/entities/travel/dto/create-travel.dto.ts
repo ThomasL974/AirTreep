@@ -5,13 +5,16 @@ import { User } from "src/entities/user/entities/user.entity"
 export class CreateTravelDto {
     @IsEmpty({message: 'Un titre est requis'})
     title!: string
+    country!: string
+    activityType!: string
+    city!: string
     difficulty!: string
     description!: string
-    createdAt!: string
-    locomotionType!: number
-    @IsEmpty({message: 'Un départ est requis'})
+    unityTime!: number
+    time!: number
     startLocation!: string
-    @IsEmpty({message: 'Un arrivé est requis'})
     arrivalLocation!: string
+    latitude!: number
+    longitude!: number
     userId!: User
 }

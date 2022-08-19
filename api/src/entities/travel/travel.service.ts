@@ -21,9 +21,15 @@ export class TravelService {
     travel.title = createTravelDto.title
     travel.difficulty = createTravelDto.difficulty
     travel.description = createTravelDto.description
-    travel.locomotionType = createTravelDto.locomotionType
     travel.startLocation = createTravelDto.startLocation
     travel.arrivalLocation = createTravelDto.arrivalLocation
+    travel.country = createTravelDto.country
+    travel.activityType = createTravelDto.activityType
+    travel.city = createTravelDto.city
+    travel.unityTime = createTravelDto.unityTime
+    travel.time = createTravelDto.time
+    travel.latitude = createTravelDto.latitude
+    travel.longitude = createTravelDto.longitude
     // Check if the user exist
     if (userId) {
       travel.user = { id: userId } as User
@@ -83,10 +89,15 @@ export class TravelService {
     travel.title = updateTravelDto.title
     travel.difficulty = updateTravelDto.difficulty
     travel.description = updateTravelDto.description
-    travel.updatedAt = updateDate
-    travel.locomotionType = updateTravelDto.locomotionType
     travel.startLocation = updateTravelDto.startLocation
     travel.arrivalLocation = updateTravelDto.arrivalLocation
+    travel.country = updateTravelDto.country
+    travel.activityType = updateTravelDto.activityType
+    travel.city = updateTravelDto.city
+    travel.unityTime = updateTravelDto.unityTime
+    travel.time = updateTravelDto.time
+    travel.latitude = updateTravelDto.latitude
+    travel.longitude = updateTravelDto.longitude
 
     try {
       await this.travelsRepository.save(travel);

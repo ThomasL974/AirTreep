@@ -11,29 +11,34 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 export class Travel {
     @PrimaryGeneratedColumn('uuid')
     id!: string
-    @Column()
+    @Column({nullable: true})
     title!: string
-    @Column(
-        // {
-        //     type: 'enum',
-        //     enum: Difficulties,
-        //     default: Difficulties.MEDIUM
-        // }
-        {nullable: true}
-    )
+    @Column({nullable: true})
+    country!: string
+    @Column({nullable: true})
+    activityType!: string
+    @Column({nullable: true})
+    city!: string
+    @Column({nullable: true})
     difficulty!: string
-    @Column()
+    @Column({nullable: true})
     description!: string
+    @Column({nullable: true})
+    unityTime!: number
+    @Column({nullable: true})
+    time!: number
     @CreateDateColumn()
     createdAt!: string
     @Column({nullable: true})
     updatedAt!: Date
-    @Column()
-    locomotionType!: number
-    @Column()
+    @Column({nullable: true})
     startLocation!: string
-    @Column()
+    @Column({nullable: true})
     arrivalLocation!: string
+    @Column({nullable: true})
+    latitude!: number
+    @Column({nullable: true})
+    longitude!: number
     @OneToMany(() => Picture, picture => picture.travel, {nullable: true})
     pictures!: Picture[]
     @ManyToOne(() => User, user => user.travels)
