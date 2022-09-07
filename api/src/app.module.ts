@@ -10,23 +10,26 @@ import { PictureModule } from './entities/picture/picture.module';
 import { FavouritesTravelModule } from './entities/favourites-travel/favourites-travel.module';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 
 require('dotenv').config()
 
 @Module({
   imports: [
     UserModule,
-    LikeModule,
     TagModule,
     TravelModule,
+    LikeModule,
     CommentModule,
-    PictureModule,
     FavouritesTravelModule,
+    PictureModule,
     RouterModule.register([
       {
         path: 'auth',
         module: UserModule,
+      },
+      {
+        path: 'tag',
+        module: TagModule
       },
       {
         path: 'travels',

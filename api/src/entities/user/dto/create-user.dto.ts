@@ -2,12 +2,15 @@ import { Comment } from "src/entities/comment/entities/comment.entity"
 import { FavouritesTravel } from "src/entities/favourites-travel/entities/favourites-travel.entity"
 import { Like } from "src/entities/like/entities/like.entity"
 import { Travel } from "src/entities/travel/entities/travel.entity"
-import { IsNotEmpty } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
 
 export class CreateUserAccountDto {
-    @IsNotEmpty({message: 'L\'email est requis'})
+    @IsNotEmpty({message: 'email empty'})
+    @IsEmail()
+    @IsString()
     email!: string
-    @IsNotEmpty({ message: 'Le mot de passe est requis' })
+    @IsNotEmpty({ message: 'password empty' })
+    @IsString()
     password!: string
     createdAt!: string
     firstName!: string

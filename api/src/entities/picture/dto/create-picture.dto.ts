@@ -1,7 +1,9 @@
-import { Travel } from "src/entities/travel/entities/travel.entity"
+import { Travel } from "../../travel/entities/travel.entity"
+import { User } from "../../user/entities/user.entity"
 
 export class CreatePictureDto {
     title!: string
     urlImg!: string
-    travelId!: string
+    travelId!: Travel
+    userId!: User
 }

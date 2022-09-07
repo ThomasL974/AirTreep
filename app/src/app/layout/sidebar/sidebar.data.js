@@ -14,16 +14,16 @@ export const SidebarDataExternal = [
         icon: <RiCompassDiscoverFill />,
         link: '/discover',
     },
-    {
-        title: 'Classements',
-        icon: <AiFillTrophy />,
-        link: '/ranking',
-    },
-    {
-        title: 'Les 4 éléments',
-        icon: <RiDashboardFill />,
-        link: '/ressources',
-    },
+    // {
+    //     title: 'Classements',
+    //     icon: <AiFillTrophy />,
+    //     link: '/ranking',
+    // },
+    // {
+    //     title: 'Les 4 éléments',
+    //     icon: <RiDashboardFill />,
+    //     link: '/ressources',
+    // },
 ]
 
 export const SidebarDataInternal = [
@@ -32,19 +32,19 @@ export const SidebarDataInternal = [
         icon: <FaPlane />,
         link: '/travels',
     },
-    {
-        title: 'Favoris',
-        icon: <AiFillStar />,
-        link: '/favourites'
-    },
-    {
-        title: 'Aimé',
-        icon: <AiFillHeart />,
-        link: '/liked'
-    },
-    {
-        title: 'Tableau de bord',
-        icon: <MdSpaceDashboard />,
-        link: '/dashboard',
-    },
+    // {
+    //     title: 'Favoris',
+    //     icon: <AiFillStar />,
+    //     link: '/favourites'
+    // },
+    // {
+    //     title: 'Aimé',
+    //     icon: <AiFillHeart />,
+    //     link: '/liked'
+    // },
+    // {
+    //     title: 'Tableau de bord',
+    //     icon: <MdSpaceDashboard />,
+    //     link: '/dashboard',
+    // },
 ]

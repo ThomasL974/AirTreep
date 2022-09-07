@@ -1,20 +1,26 @@
-import { IsEmpty } from "class-validator"
+import { IsNotEmpty, IsNumber, IsString } from "class-validator"
 import { User } from "src/entities/user/entities/user.entity"
-// import { Difficulties } from "../enums/travel.enum"
 
 export class CreateTravelDto {
-    @IsEmpty({message: 'Un titre est requis'})
+    @IsString()
+    @IsNotEmpty()
     title!: string
     country!: string
+    @IsString()
+    @IsNotEmpty()
     activityType!: string
     city!: string
-    difficulty!: string
+    difficulty!: number
+    @IsString()
+    @IsNotEmpty()
     description!: string
     unityTime!: number
     time!: number
     startLocation!: string
     arrivalLocation!: string
-    latitude!: number
-    longitude!: number
+    latitudeStart!: number
+    longitudeStart!: number
+    postalCode!: number
+    address!: string
     userId!: User
 }

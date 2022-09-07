@@ -4,9 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate( context: ExecutionContext, ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest()
     return this.validateRequest(req);
   }

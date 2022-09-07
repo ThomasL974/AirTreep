@@ -1,10 +1,11 @@
-import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 import { CreateTravelDto } from './dto/create-travel.dto';
 import { UpdateTravelDto } from './dto/update-travel.dto';
 import { Travel } from './entities/travel.entity';
+import _ from 'lodash'
 
 @Injectable()
 export class TravelService {
@@ -19,7 +20,7 @@ export class TravelService {
     const travel = new Travel();
     // Set Travel
     travel.title = createTravelDto.title
-    travel.difficulty = createTravelDto.difficulty
+    travel.difficulty = +createTravelDto.difficulty
     travel.description = createTravelDto.description
     travel.startLocation = createTravelDto.startLocation
     travel.arrivalLocation = createTravelDto.arrivalLocation
@@ -27,58 +28,123 @@ export class TravelService {
     travel.activityType = createTravelDto.activityType
     travel.city = createTravelDto.city
     travel.unityTime = createTravelDto.unityTime
-    travel.time = createTravelDto.time
-    travel.latitude = createTravelDto.latitude
-    travel.longitude = createTravelDto.longitude
+    travel.time = +createTravelDto.time
+    travel.latitudeStart = createTravelDto.latitudeStart
+    travel.longitudeStart = createTravelDto.longitudeStart
+    travel.postalCode = +createTravelDto.postalCode
+    travel.address = createTravelDto.address
     // Check if the user exist
     if (userId) {
       travel.user = { id: userId } as User
     } else {
-      return { message: "Un utilisateur est requis pour la création d'un voyage" }
+      throw new UnauthorizedException();
     }
 
     return await this.travelsRepository.save(travel);
   }
 
   async findAll(queries): Promise<Travel[]> {
-
-    let where = {};
+    console.log(queries.title);
     try {
-      if(queries){
-        where = { ...queries };
+      if (!this._isEmptyObject(queries)) {
+        console.log(queries);
         return await this.travelsRepository.find(
           {
-            where : where,
-            relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites']
+            select: {
+              user: {
+                id: true,
+                lastName: true,
+                firstName: true,
+                password: false,
+                email: false
+              }
+            },
+            where: { title: Like(`%${queries.title.replace(' ','+')}%`) },
+            relations: ['user', 'pictures', 'likes', 'favourites']
           }
         )
-      }else{
+      } else {
+        console.log("hello");
         return await this.travelsRepository.find(
           {
-            relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites']
+            select: {
+              user: {
+                id: true,
+                lastName: true,
+                firstName: true,
+                password: false,
+                email: false
+              }
+            },
+            relations: ['user', 'pictures', 'likes', 'favourites']
           }
         )
       }
     } catch (error) {
-      throw new HttpException('not good credentials', 400);
+      throw new BadRequestException();
     }
   }
 
-  async findAllByUserId(userId): Promise<Travel[]> {
-    return await this.travelsRepository.find({
-      where: {
-        user: { id: userId },
-      },
-      relations: ['user'],
-    });
+  async findAllByUserId(userId, queries): Promise<Travel[]> {
+    let where = {} as any;
+    try {
+      if (!this._isEmptyObject(queries)) {
+        where = { ...queries };
+        return await this.travelsRepository.find(
+          {
+            select: {
+              user: {
+                id: true,
+                lastName: true,
+                firstName: true,
+                password: false,
+                email: false
+              }
+            },
+            where: { title: Like(`%${encodeURIComponent(queries.title)}%`),  user: { id: userId }},
+            relations: ['user', 'pictures', 'likes', 'favourites']
+          }
+        )
+      } else {
+        return await this.travelsRepository.find({
+          select: {
+            user: {
+              id: true,
+              lastName: true,
+              firstName: true,
+              password: false,
+              email: false
+            }
+          },
+          where: {
+            user: { id: userId },
+          },
+          relations: ['user'],
+        });
+      }
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 
   async findOne(id: string): Promise<Travel[]> {
-    return await this.travelsRepository.find({ where: { id }, relations: ['user', 'pictures', 'tags', 'comments', 'likes', 'favourites'] });
+    return await this.travelsRepository.find(
+      {
+        select: {
+          user: {
+            id: true,
+            lastName: true,
+            firstName: true,
+            password: false,
+            email: false
+          }
+        },
+        where: { id },
+        relations: ['user', 'pictures', 'likes', 'favourites']
+      });
   }
 
   async update(id: string, updateTravelDto: UpdateTravelDto, userId) {
-    const updateDate = new Date()
     // Get travel by id
     const travel = await this.travelsRepository.findOne({ where: { id }, relations: ['user'] })
 
@@ -96,14 +162,15 @@ export class TravelService {
     travel.city = updateTravelDto.city
     travel.unityTime = updateTravelDto.unityTime
     travel.time = updateTravelDto.time
-    travel.latitude = updateTravelDto.latitude
-    travel.longitude = updateTravelDto.longitude
+    travel.latitudeStart = updateTravelDto.latitudeStart
+    travel.longitudeStart = updateTravelDto.longitudeStart
+    travel.address = updateTravelDto.address
 
     try {
       await this.travelsRepository.save(travel);
       return { message: 'Le voyage a été modifié' }
     } catch (error) {
-      return { message: 'Le voyage n\'a pas été modifié' }
+      throw new UnauthorizedException();
     }
   }
 
@@ -116,7 +183,11 @@ export class TravelService {
       await this.travelsRepository.remove(travel);
       return { message: 'Le voyage a bien été supprimé' }
     } catch (error) {
-      return { message: 'Le voyage n\'a pas été supprimé' }
+      throw new UnauthorizedException();
     }
+  }
+
+  private _isEmptyObject(object: any): boolean {
+    return (typeof object === 'object' && Object.keys(object).length === 0);
   }
 }

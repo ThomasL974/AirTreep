@@ -9,12 +9,14 @@ import test from '../../../../assets/images/test.jpg';
 import { NavLink } from 'react-router-dom';
 import ConfirmModal from '../confirmModal/ConfirmModal';
 
-const CardTravel = ({ travel, isAuthenticated, open, setOpen, handleDelete }) => {
+const CardTravel = ({ travel, isAuthenticated, fetchTravels }) => {
     const [infos, setInfos] = useState({});
+    const [open, setOpen] = useState(false);
+
     const handleOpen = () => {
         setInfos({
             title: 'Supprimer un voyage',
-            description: `Voulez-vous vraiment supprimer le voyage : ${travel.title} ?`
+            travel: travel.title
         })
         setOpen(true);
     };
@@ -22,6 +24,7 @@ const CardTravel = ({ travel, isAuthenticated, open, setOpen, handleDelete }) =>
     const handleClose = () => {
         setOpen(false);
     };
+
     return (
         <Card className="travels__card" sx={{ width: 347 }}>
             <CardMedia
@@ -50,9 +53,10 @@ const CardTravel = ({ travel, isAuthenticated, open, setOpen, handleDelete }) =>
                         </NavLink>
                         <ConfirmModal
                             handleClose={handleClose}
-                            handleDelete={handleDelete}
+                            fetchTravels={fetchTravels}
                             travel={travel}
                             open={open}
+                            setOpen={setOpen}
                             infos={infos}>
                         </ConfirmModal>
                     </>

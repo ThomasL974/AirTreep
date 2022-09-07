@@ -1,65 +1,79 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { singin } from '../../../core/services/auth/auth.service';
 import { ToastMessage } from '../../layout/shared/toast/Toast';
-import { useDispatch } from 'react-redux';
-import { login } from '../../../core/redux/userSlice';
 import { useNavigate, useParams } from 'react-router';
-import TokenService from '../../../core/services/auth/token/token.service';
 import { signup } from '../../../core/services/auth/auth.service'
 import { ImArrowLeft2 } from "react-icons/im";
-import { Button, TextField } from '@mui/material'
+import { Button } from '@mui/material'
 import { createTravel, getTravel, updateTravel } from '../../../core/services/travels/travel.service'
-import MapboxAutocomplete from "react-mapbox-autocomplete";
+import { difficulties } from '../../../assets/data/data';
+import { errorSinginForm, errorTravelForm } from '../../../assets/data/errorsData';
+import { AddressAutofill } from '@mapbox/search-js-react';
+import { Field, FormikProvider, useFormik } from 'formik';
+import _ from 'lodash';
+import { handleClick, handleClose } from '../shared/toast/toastLogique';
+import { getUserInfos, updateUser, uploadProfileImg } from '../../../core/services/user/user.service';
+import { FaAddressCard } from "react-icons/fa";
+
+
 
 export const FormSignin = ({ credentials, setCredentials, toast, setToast, setRegister }) => {
 
     const [open, setOpen] = useState(false)
-    const dispatch = useDispatch()
     const navigate = useNavigate()
+
+    /**
+     * This function is used to validate the form
+     * @param {*} values represents the fields of the form
+     * @returns errors
+     */
+    const validate = values => {
+        const errors = {};
+        if (!values.email) {
+            errors.email = errorSinginForm.email.required;
+        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+            errors.email = errorSinginForm.email.character;
+        }
+
+        if (!values.password) {
+            errors.password = errorSinginForm.password.required;
+        }
+
+        return errors;
+    };
+
+    /**
+     * Retrieves the different functions of formik and initializes the form fields
+     */
+    const formikbag = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        validate,
+        enableReinitialize: true,
+        onSubmit: values => {
+            _submit(values);
+        },
+    });
+
+    const { handleSubmit, handleChange, handleBlur, values, errors, touched } = formikbag;
 
     const displayRegister = () => {
         setRegister(false);
     }
 
-    const handleClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
-
-    const handleChange = (e) => {
-        setCredentials({
-            ...credentials,
-            [e.target.name]: e.target.value
-        })
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const _submit = async (values) => {
         try {
 
-            await singin(credentials)
-
-            const localToken = TokenService.getLocalAccessToken()
-
-            dispatch(login({
-                isAuthenticated: true,
-                userData: JSON.parse(atob(localToken.split('.')[1]))
-            }))
+            await singin(values)
 
             setToast({
                 message: 'Vous êtes connecté',
                 severity: 'success'
             })
 
-            handleClick()
+            handleClick(setOpen);
 
             setTimeout(() => {
                 navigate('/travels')
@@ -69,7 +83,7 @@ export const FormSignin = ({ credentials, setCredentials, toast, setToast, setRe
                 message: 'Email ou mot de passe incorrect',
                 severity: 'error'
             })
-            handleClick()
+            handleClick(setOpen);
         }
     }
 
@@ -77,8 +91,26 @@ export const FormSignin = ({ credentials, setCredentials, toast, setToast, setRe
         <div className="signin">
             <h1>Se connecter</h1>
             <form className="signin__form" onSubmit={handleSubmit}>
-                <input type="email" name="email" className="signin__form-email" placeholder="E-mail" onChange={handleChange} />
-                <input type="password" name="password" className="signin__form-password" placeholder="Mot de passe" onChange={handleChange} />
+                <input
+                    type="email"
+                    name="email"
+                    className="input-form"
+                    placeholder="E-mail"
+                    onChange={handleChange}
+                    autoComplete="off"
+                    onBlur={handleBlur} />
+                {errors.email && touched.email ? <div className='error-form'>{errors.email}</div> : null}
+
+                <input
+                    type="password"
+                    name="password"
+                    className="input-form"
+                    placeholder="Mot de passe"
+                    onChange={handleChange}
+                    autoComplete="off"
+                    onBlur={handleBlur} />
+                {errors.password && touched.password ? <div className='error-form'>{errors.password}</div> : null}
+
                 <input type="submit" value="Se connecter" className="signin__form-send btn btn-send" />
             </form>
             <div className="forgot">
@@ -88,7 +120,7 @@ export const FormSignin = ({ credentials, setCredentials, toast, setToast, setRe
                 <p>Pas de compte ?</p>
                 <button onClick={displayRegister}>Créer un compte</button>
             </div>
-            <ToastMessage open={open} handleClose={handleClose} toast={toast}></ToastMessage>
+            <ToastMessage open={open} handleClose={(e, reason, setOpen) => handleClose(e, reason, setOpen)} toast={toast}></ToastMessage>
         </div>
     )
 }
@@ -100,17 +132,6 @@ export const FormSignup = ({ credentials, setCredentials, toast, setToast, setRe
     const handleDisplayRegisterForm = () => {
         setRegister(true);
     }
-    const handleClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpen(false);
-    };
 
     const handleChange = (e) => {
         setCredentials({
@@ -128,7 +149,7 @@ export const FormSignup = ({ credentials, setCredentials, toast, setToast, setRe
                 message: 'Vous êtes maintenant inscrit',
                 severity: 'success'
             })
-            handleClick()
+            handleClick(setOpen)
 
             setTimeout(() => {
                 handleDisplayRegisterForm()
@@ -138,7 +159,7 @@ export const FormSignup = ({ credentials, setCredentials, toast, setToast, setRe
                 message: 'Des informations sont incorrect',
                 severity: 'error'
             })
-            handleClick()
+            handleClick(setOpen)
         }
     }
 
@@ -150,14 +171,14 @@ export const FormSignup = ({ credentials, setCredentials, toast, setToast, setRe
             <h1>S'inscrire</h1>
             <form className="signup__form" onSubmit={handleSubmit}>
                 <div className="signup__first-last">
-                    <input type="text" name="firstName" className="signup__form-firstName" placeholder="Prénom" onChange={handleChange} />
-                    <input type="text" name="lastName" className="signup__form-lastName" placeholder="Nom" onChange={handleChange} />
+                    <input type="text" name="firstName" className="input-form" placeholder="Prénom" onChange={handleChange} autoComplete="off" />
+                    <input type="text" name="lastName" className="input-form" placeholder="Nom" onChange={handleChange} autoComplete="off" />
                 </div>
-                <input type="text" name="pseudo" className="signup__form-pseudo" placeholder="Pseudonyme" onChange={handleChange} />
-                <input type="email" name="email" className="signup__form-email" placeholder="Email" onChange={handleChange} />
-                <input type="password" name="password" className="signup__form-password" placeholder="Mot de passe" onChange={handleChange} />
-                <textarea name="description" className="signup__form-description" placeholder="Bio..." onChange={handleChange} rows={6} />
-                <input type="submit" value="Send" className="signup__form-send btn btn-send" />
+                <input type="text" name="pseudo" className="input-form" placeholder="Pseudonyme" onChange={handleChange} autoComplete="off" />
+                <input type="email" name="email" className="input-form" placeholder="Email" onChange={handleChange} autoComplete="off" />
+                <input type="password" name="password" className="input-form" placeholder="Mot de passe" onChange={handleChange} autoComplete="off" />
+                <textarea name="description" className="input-form" placeholder="Bio..." onChange={handleChange} rows={6} autoComplete="off" />
+                <input type="submit" value="S'inscrire" className="signup__form-send btn btn-send" />
                 <ToastMessage open={open} handleClose={handleClose} toast={toast}></ToastMessage>
             </form>
         </div>
@@ -166,75 +187,364 @@ export const FormSignup = ({ credentials, setCredentials, toast, setToast, setRe
 
 export const FormTravel = () => {
 
-    const [credentials, setCredentials] = useState({})
+    const [credentials, setCredentials] = useState({});
+    const [tokenMapBox, setTokenMapBox] = useState('');
+    const [radio, setRadio] = useState('');
+    const [isCreatingMode, setIsCreatingMode] = useState(true);
+    const [toast, setToast] = useState({});
+    const [open, setOpen] = useState(false);
+    const [showAddressInfos, setShowAddressInfos] = useState(false);
+    const [showAddressLgn, setShowAddressLgn] = useState(false);
+    const [feature, setFeature] = useState();
     const travelId = useParams('id').id;
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-    const mapAccess = {
-        mapboxApiAccessToken:
-            process.env.REACT_APP_MAP_BOX_TOKEN
+    /**
+     * This function is used to validate the form
+     * @param {*} values represents the fields of the form
+     * @returns errors
+     */
+    const validate = values => {
+        const errors = {};
+        if (!values.title) {
+            errors.title = errorTravelForm.title.required;
+        } else if (values.title.length > 50) {
+            errors.title = errorTravelForm.title.sentenceLength;
+        }
+
+        if (!values.activityType) {
+            errors.activityType = errorTravelForm.activityType.required;
+        } else if (values.activityType.length > 100) {
+            errors.activityType = errorTravelForm.activityType.sentenceLength;
+        }
+
+        if (!values.address && showAddressLgn) {
+            errors.address = errorTravelForm.address.required;
+        } else if (values.address.length > 100) {
+            errors.address = errorTravelForm.address.sentenceLength;
+        }
+
+        if (!values.description) {
+            errors.description = errorTravelForm.description.required;
+        }
+
+        if (values.difficulty.length <= 0) {
+            errors.difficulty = errorTravelForm.difficulty.required;
+        }
+
+        return errors;
     };
 
-    const _suggestionSelect = (result, lat, long, text) => {
-        console.log(result);
-    }
-
+    /**
+     * Fetch travel handle the information extraction
+     * @returns a travel information
+     */
     const fetchTravel = async () => {
         if (travelId) {
             try {
-                const data = await getTravel(travelId)
-                setCredentials(data[0])
+                const data = await getTravel(travelId);
+                setCredentials(data[0]);
+                setIsCreatingMode(false);
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         } else {
             return;
         }
     }
 
-    const handleChange = (e) => {
-        setCredentials({
-            ...credentials,
-            [e.target.name]: e.target.value
-        })
+    /**
+     * Retrieves the different functions of formik and initializes the form fields
+     */
+    const formikbag = useFormik({
+        initialValues: {
+            title: !isCreatingMode ? credentials.title : '',
+            activityType: !isCreatingMode ? credentials.activityType : '',
+            description: !isCreatingMode ? credentials.description : '',
+            difficulty: !isCreatingMode ? credentials.difficulty : '',
+            address: !isCreatingMode ? credentials.address : '',
+            country: !isCreatingMode ? credentials.country : '',
+            city: !isCreatingMode ? credentials.city : '',
+            postalCode: !isCreatingMode ? credentials.postalCode : '',
+        },
+        validate,
+        enableReinitialize: true,
+        onSubmit: values => {
+            _submit(values);
+        },
+    });
 
-    }
+    const { handleSubmit, handleChange, handleBlur, values, errors, touched } = formikbag;
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    /**
+     * Handle the sending information
+     * @param {*} values target values formik
+     */
+    const _submit = async (values) => {
         try {
-            travelId ? await updateTravel(credentials, travelId) : await createTravel(credentials)
-            navigate('/travels')
+            travelId ? await updateTravel(values, travelId) : await createTravel(values)
+            setTimeout(() => {
+
+                navigate('/travels')
+            }, 2000)
         } catch (error) {
-            console.log(error)
+            console.log(error);
+            setToast({
+                message: isCreatingMode ? 'Erreur pendant la sauvegarde' : 'Erreur pendant la mise à jour',
+                severity: 'error'
+            })
+            handleClick(setOpen);
         }
     }
 
+    /**
+     * Use a callback to retrieve information
+     */
+    const handleRetrieve = useCallback(
+        (res) => {
+            const feature = res.features[0];
+            setFeature(feature);
+            setShowAddressInfos(true);
+        },
+        [setFeature]
+    );
+
     useEffect(() => {
         fetchTravel();
+        const accessToken = process.env.REACT_APP_MAP_BOX_TOKEN;
+        setTokenMapBox(accessToken);
     }, [])
 
     return (
-        <div className="form-travel">
-            <h1>Création d'un voyage</h1>
-            <div className="form-travel__content">
-                <form onSubmit={handleSubmit}>
-                    <TextField value={credentials.title} id="outlined-basic" name="title" label="Titre" variant="outlined" onChange={handleChange} />
-                    <TextField value={credentials.description} id="outlined-basic" name="description" label="Description" variant="outlined" onChange={handleChange} />
-                    <TextField value={credentials.startLocation} id="outlined-basic" name="startLocation" label="Départ" variant="outlined" onChange={handleChange} />
-                    <TextField value={credentials.arrivalLocation} id="outlined-basic" name="arrivalLocation" label="Arrivé" variant="outlined" onChange={handleChange} />
-                    <MapboxAutocomplete
-                        publicKey={mapAccess.mapboxApiAccessToken}
-                        inputClass="form-control search"
-                        onSuggestionSelect={_suggestionSelect}
-                        country="fr"
-                        resetSearch={false}
-                        placeholder="Rechercher un lieu..."
-                    />
-                    <Button type="submit" variant="contained">Envoyer</Button>
-                </form>
+        <>
+
+            <div className="form-travel">
+                <h1>{isCreatingMode ? 'Création d\'une destination' : `Mise à jour de ${values.title}`}</h1>
+                <div className="form-travel__content form-group">
+                    <form onSubmit={handleSubmit}>
+
+                        <label className='required'>Titre</label>
+                        <input
+                            id="title"
+                            name="title"
+                            placeholder="Titre"
+                            className='input-form'
+                            onBlur={handleBlur}
+                            variant="outlined"
+                            onChange={handleChange}
+                            value={values.title} />
+                        {errors.title && touched.title ? <div className='error-form'>{errors.title}</div> : null}
+
+                        <label className='required'>Type de l'activité</label>
+                        <input
+                            id="activityType"
+                            name="activityType"
+                            placeholder="Type d'activité"
+                            className='input-form'
+                            variant="outlined"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.activityType} />
+                        {errors.activityType && touched.activityType ? <div className='error-form'>{errors.activityType}</div> : null}
+
+                        <label className='required'>Difficulté</label>
+                        <div role="group" className='radio-group' aria-labelledby="my-radio-group">
+                            <FormikProvider value={formikbag}>
+                                {_.map(difficulties, (value, key) =>
+                                    <label id={value.id} key={key}>
+                                        <Field id={value.id} type="radio" name="difficulty" className="radio-form" value={value.id} />
+                                        {value.label}
+                                    </label>
+                                )}
+                            </FormikProvider>
+                        </div>
+                        {errors.difficulty && touched.difficulty ? <div className='error-form'>{errors.difficulty}</div> : null}
+
+                        <button type='button' className={`address-button ${showAddressLgn && 'check-address-button'}`} onClick={() => !showAddressLgn ? setShowAddressLgn(true) : setShowAddressLgn(false)}><FaAddressCard/> Une adresse ?</button>
+                        {(showAddressLgn || values.address) &&
+                            <>
+                                <label className='required'>Adresse</label>
+                                <AddressAutofill accessToken={tokenMapBox} onRetrieve={handleRetrieve}>
+                                    <input
+                                        id="address"
+                                        className="input-form"
+                                        placeholder="Exemple : 189 route de la ravine sèche"
+                                        autoComplete="address-line1"
+                                        name="address"
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        value={values.address}
+                                    />
+                                </AddressAutofill>
+                                {errors.address && touched.address ? <div className='error-form'>{errors.address}</div> : null}
+
+                                {(showAddressInfos || values.address) &&
+                                    <>
+                                        <label>Pays</label>
+                                        <input
+                                            id="country"
+                                            name="country"
+                                            placeholder="Pays"
+                                            className='input-form'
+                                            variant="outlined"
+                                            autoComplete='country-name'
+                                            onChange={handleChange}
+                                            value={values.country}
+                                            readOnly />
+
+                                        <label>Ville</label>
+                                        <input
+                                            id="city"
+                                            name="city"
+                                            placeholder="Ville"
+                                            className='input-form'
+                                            variant="outlined"
+                                            autoComplete='address-level2'
+                                            onChange={handleChange}
+                                            readOnly
+                                            value={values.city} />
+
+                                        <label>Code postal</label>
+                                        <input
+                                            id="postalCode"
+                                            name="postalCode"
+                                            placeholder="Code postal"
+                                            className='input-form'
+                                            autoComplete='postal-code'
+                                            variant="outlined"
+                                            onChange={handleChange}
+                                            readOnly
+                                            value={values.postalCode} />
+                                    </>
+                                }
+                            </>
+                        }
+                        <label className='required'>Description</label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            placeholder="Description"
+                            className='input-form textarea-form'
+                            variant="outlined"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            rows={10}
+                            value={values.description} />
+                        {errors.description && touched.description ? <div className='error-form'>{errors.description}</div> : null}
+
+                        <Button type="submit" variant="contained">{isCreatingMode ? 'Créer' : 'Sauvegarder'}</Button>
+                    </form>
+                </div>
             </div>
-        </div>
+            <ToastMessage open={open} handleClose={(e, reason) => handleClose(e, reason, setOpen)} toast={toast}></ToastMessage>
+        </>
     )
 }
 
+export const FormAccount = ({ isAuthenticated, fetchUserInformations, setCredentials, credentials }) => {
+    const [selectedFile, setSelectedFile] = useState();
+
+    /**
+     * Retrieves the different functions of formik and initializes the form fields
+     */
+    const formikbag = useFormik({
+        initialValues: {
+            lastName: credentials ? credentials.lastName : '',
+            firstName: credentials ? credentials.firstName : '',
+            description: credentials ? credentials.description : '',
+            pseudo: credentials ? credentials.pseudo : ''
+        },
+        enableReinitialize: true,
+        onSubmit: values => {
+            _submit(values, selectedFile)
+        },
+    });
+
+    const { handleSubmit, handleChange, handleBlur, values, errors, touched } = formikbag;
+
+    /**
+     * Handle the sending information
+     * @param {*} values target values formik
+     */
+    const _submit = async (values, selectedFile) => {
+        const formData = new FormData();
+        if (selectedFile) {
+            formData.append("file", selectedFile);
+        }
+        try {
+            await updateUser(values);
+            selectedFile && await uploadProfileImg(formData);
+            fetchUserInformations();
+            setSelectedFile();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleFileSelect = (e) => {
+        console.log(e.target.files);
+        setSelectedFile(e.target.files[0])
+    }
+
+    return (
+        <>
+            <div className="form-group">
+
+                <form onSubmit={handleSubmit}>
+                    <label>Nom</label>
+                    <input
+                        className='input-form'
+                        id="lastName"
+                        name="lastName"
+                        placeholder="Nom"
+                        onBlur={handleBlur}
+                        variant="outlined"
+                        onChange={handleChange}
+                        value={values.lastName} />
+
+                    <label>Prénom</label>
+                    <input
+                        className='input-form'
+                        id="firstName"
+                        name="firstName"
+                        placeholder="Prénom"
+                        onBlur={handleBlur}
+                        variant="outlined"
+                        onChange={handleChange}
+                        value={values.firstName} />
+
+                    <label>Bio</label>
+                    <input
+                        className='input-form'
+                        id="description"
+                        name="description"
+                        placeholder="Bio"
+                        onBlur={handleBlur}
+                        variant="outlined"
+                        onChange={handleChange}
+                        value={values.description} />
+
+                    <label>Pseudonyme</label>
+                    <input
+                        className='input-form'
+                        id="pseudo"
+                        name="pseudo"
+                        placeholder="Pseudonyme"
+                        onBlur={handleBlur}
+                        variant="outlined"
+                        onChange={handleChange}
+                        value={values.pseudo} />
+
+                    <input
+                        className='input-form'
+                        name="profilImg"
+                        id="profilImg"
+                        type="file"
+                        onChange={handleFileSelect} />
+
+                    <Button type="submit" variant="contained">Sauvegarder</Button>
+                </form>
+            </div>
+        </>
+    )
+}

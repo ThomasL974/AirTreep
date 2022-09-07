@@ -8,12 +8,6 @@ export class Picture {
     id!: string
     @Column()
     fileName!: string
-    @Column({
-        type: 'bytea',
-    })
-    data!: Uint8Array
-    @Column()
-    mimeType!: string
     @CreateDateColumn()
     createdAt!: string
     @ManyToOne(() => Travel, travel => travel.pictures)

@@ -1,14 +1,12 @@
 import _ from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { deleteTravel, getTravelsByUserId } from '../../../core/services/travels/travel.service'
+import { getTravelsByUserId } from '../../../core/services/travels/travel.service'
 import CardTravel from '../../layout/shared/card/CardTravel'
 import CardAdd from '../../layout/shared/card/CardAdd'
 import { BsPlusLg } from 'react-icons/bs'
 
 const Travel = ({ travels, setTravels, isAuthenticated }) => {
-
-    const [open, setOpen] = useState(false);
 
     const fetchTravels = async () => {
         try {
@@ -17,17 +15,6 @@ const Travel = ({ travels, setTravels, isAuthenticated }) => {
         } catch (error) {
             console.log(error)
         }
-    }
-
-    const handleDelete = async (travelId) => {
-        try {
-            await deleteTravel(travelId);
-            setOpen(false);
-            fetchTravels();
-        } catch (error) {
-            console.log(error)
-        }
-
     }
 
     useEffect(() => {
@@ -39,21 +26,19 @@ const Travel = ({ travels, setTravels, isAuthenticated }) => {
                 <NavLink to="/travels/create">
                     <div className="btn btn-create">
                         <BsPlusLg/>
-                        <span>Ajouter un voyage</span>
+                        <span>Ajouter une destination</span>
                     </div>
                 </NavLink>
             </div>
             <div className="travels">
                 {_.map(travels, (travel, key) => (
-                    <>
+                    <div key={key}>
                         <CardTravel
-                            handleDelete={handleDelete}
                             isAuthenticated={isAuthenticated}
                             travel={travel}
                             key={key}
-                            open={open}
-                            setOpen={setOpen} />
-                    </>
+                            fetchTravels={fetchTravels} />
+                    </div>
                 ))}
                 <NavLink to="/travels/create">
                     <CardAdd />

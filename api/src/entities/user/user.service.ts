@@ -30,6 +30,7 @@ export class UserService {
 
     let data = {
       userId: user.id,
+      userName: user.firstName
     }
 
     const token = sign(data, process.env.JWT_SECRET || 'secret');
@@ -39,22 +40,31 @@ export class UserService {
   // Create User account
   async register(createUserAccountDto: CreateUserAccountDto) {
     const user = new User()
+    let upperCaseFirstLetter = [];
+    let lastName = ''
 
     // format firtsname
-    let upperCaseFirstLetter = createUserAccountDto.firstName.split('');
-    upperCaseFirstLetter = upperCaseFirstLetter.map((value, key) => {
-      if(key === 0){
-        return value.toUpperCase();
-      }
-      return value
-    })
-    
+    if(createUserAccountDto.firstName){
+      upperCaseFirstLetter = createUserAccountDto.firstName.split('');
+      upperCaseFirstLetter.forEach((value, key) => {
+        if(key === 0){
+          return value.toUpperCase();
+        }
+        return value
+      })
+    }
+
     // Set user informations
     user.firstName = upperCaseFirstLetter.join('');
-    user.lastName = createUserAccountDto.lastName.toUpperCase()
+
+    if(createUserAccountDto.lastName){
+      lastName = createUserAccountDto.lastName.toUpperCase()
+    }
+    
+    user.lastName = lastName
     user.description = createUserAccountDto.description
     user.pseudo = createUserAccountDto.pseudo
-    user.email = createUserAccountDto.email.toLowerCase()
+    user.email = createUserAccountDto.email
 
     const hashedPassword = await argon2.hash(createUserAccountDto.password)
     user.password = hashedPassword;
@@ -62,19 +72,39 @@ export class UserService {
     try {
       await this.userRepository.save(user)
     } catch (error) {
-      return { message: 'Account already exist!' }
+      throw new AuthenticationFailedError(HttpStatus.UNAUTHORIZED, 'Un compte existe déjà !');
     }
   }
 
-  async getUserInfo(userId) {
+  async getOne(userId) {
     const user = await this.userRepository.findOne({ where: { id: userId } });
-    if(user.id !== userId){
+    if(!user){
       throw new UnauthorizedException();
     }
     try {
       return user;
     } catch (error) {
-      throw new HttpException("not good user", 204);
+      throw new UnauthorizedException();
+    }
+  }
+
+  async updateOne(userId, updateUserDto: UpdateUserDto, img: string){
+    const user = await this.getOne(userId);
+    if(!user){
+      throw new UnauthorizedException();
+    }
+
+    user.firstName = updateUserDto.firstName
+    user.lastName = updateUserDto.lastName
+    user.description = updateUserDto.description
+    user.pseudo = updateUserDto.pseudo
+    user.profilImg = img
+
+    try {
+      await this.userRepository.save(user)
+      return { message: 'L\'utilisateur à bien été sauvegardé' }
+    } catch (error) {
+      throw new UnauthorizedException();
     }
   }
 }

@@ -54,16 +54,19 @@ const App = () => {
     <div className="app">
       <BrowserRouter>
         <div className="content-right">
-          <Sidebar userInfos={userInfos} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+          {window.location.pathname !== '/' &&
+            <Sidebar userInfos={userInfos} isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
+          }
         </div>
         <div className="content-left">
-          <TopBar></TopBar>
+          {window.location.pathname !== '/' &&
+            <TopBar setTravels={setTravels} travels={travels}></TopBar>
+          }
           <div className="content">
             <Routes>
-              <Route path='/' element={<Home />} />
+              <Route path='/' exact element={<Home />} />
               <Route exact path='/auth' userInfos={userInfos} setUserInfos={setUserInfos} element={<FormsSign />} />
               <Route exact path='/discover' element={<Discover travels={travels} setTravels={setTravels} />} />
-              {/* Ranking instead essentials */}
               <Route exact path='/ranking' element={<Rank />} />
               <Route exact path='/ressources' element={<Ressources />} />
               <Route exact path='/travels/details/:id' element={<Details />} />
@@ -83,11 +86,17 @@ const App = () => {
                   <Route exact path='/account' element={<Account />} />
                 </>
               }
-
-              <Route
-                path="*"
-                element={<Navigate to="/discover" replace />}
-              />
+              {isAuthenticated ?
+                <Route
+                  path="*"
+                  element={<Navigate to="/travels" replace />}
+                />
+                :
+                <Route
+                  path="*"
+                  element={<Navigate to="/discover" replace />}
+                />
+              }
             </Routes>
           </div>
         </div>

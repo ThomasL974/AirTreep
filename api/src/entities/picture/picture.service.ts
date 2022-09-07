@@ -2,7 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Travel } from '../travel/entities/travel.entity';
+import { TravelService } from '../travel/travel.service';
 import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
 import { CreatePictureDto } from './dto/create-picture.dto';
 import { UpdatePictureDto } from './dto/update-picture.dto';
 import { Picture } from './entities/picture.entity';
@@ -12,26 +14,22 @@ export class PictureService {
 
   constructor(
     @InjectRepository(Picture)
-    private picturesRepository: Repository<Picture>
+    private picturesRepository: Repository<Picture>,
+    private userService: UserService,
+    private travelService: TravelService
   ) { }
 
-  async uploadFile(createPictureDto: CreatePictureDto, userId: User, dataBuffer: Buffer, filename: string, mymeType: string) {
-    
-    // const travelId = createPictureDto.travelId;
-
-    const picture = await this.picturesRepository.create({
-      mimeType: mymeType,
-      fileName: filename,
-      data: dataBuffer,
-      user: userId,
-    })
-
-    
-
-    try {
-      return await this.picturesRepository.save(picture)
-    } catch (error) {
-      return { success: 'true', message: error.message }
+  async uploadFile(createPictureDto: CreatePictureDto, userId: User, fileName: string) {
+    if(userId){
+      const picture = await this.picturesRepository.create({
+        fileName: fileName,
+        user: userId,
+      })
+      try {
+        return await this.picturesRepository.save(picture)
+      } catch (error) {
+        throw new UnauthorizedException();
+      }
     }
   }
 

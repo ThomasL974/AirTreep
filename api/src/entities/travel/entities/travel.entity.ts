@@ -1,11 +1,10 @@
-import { Comment } from "src/entities/comment/entities/comment.entity";
-import { FavouritesTravel } from "src/entities/favourites-travel/entities/favourites-travel.entity";
-import { Like } from "src/entities/like/entities/like.entity";
-import { Picture } from "src/entities/picture/entities/picture.entity";
-import { Tag } from "src/entities/tag/entities/tag.entity";
-import { User } from "src/entities/user/entities/user.entity";
+import { Comment } from "../../comment/entities/comment.entity";
+import { FavouritesTravel } from "../../favourites-travel/entities/favourites-travel.entity";
+import { Like } from "../../like/entities/like.entity";
+import { Picture } from "../../picture/entities/picture.entity";
+import { Tag } from "../../tag/entities/tag.entity";
+import { User } from "../../user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-// import { Difficulties } from "../enums/travel.enum";
 
 @Entity()
 export class Travel {
@@ -14,19 +13,23 @@ export class Travel {
     @Column({nullable: true})
     title!: string
     @Column({nullable: true})
+    address!: string
+    @Column({nullable: true})
     country!: string
+    @Column({nullable: true})
+    postalCode!: number
     @Column({nullable: true})
     activityType!: string
     @Column({nullable: true})
     city!: string
     @Column({nullable: true})
-    difficulty!: string
+    difficulty!: number
     @Column({nullable: true})
     description!: string
     @Column({nullable: true})
-    unityTime!: number
-    @Column({nullable: true})
     time!: number
+    @Column({nullable: true})
+    unityTime!: number
     @CreateDateColumn()
     createdAt!: string
     @Column({nullable: true})
@@ -36,9 +39,15 @@ export class Travel {
     @Column({nullable: true})
     arrivalLocation!: string
     @Column({nullable: true})
-    latitude!: number
+    latitudeStart!: number
     @Column({nullable: true})
-    longitude!: number
+    longitudeStart!: number
+    @Column({nullable: true})
+    latitudeEnd!: number
+    @Column({nullable: true})
+    longitudeEnd!: number
+    @Column({nullable: true})
+    coverPicture!: string
     @OneToMany(() => Picture, picture => picture.travel, {nullable: true})
     pictures!: Picture[]
     @ManyToOne(() => User, user => user.travels)

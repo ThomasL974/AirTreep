@@ -9,10 +9,16 @@
 
     .signin,
     .signup {
-        width: 100%;
+        width: 500px;
+        min-width: 500px;
         height: 100%;
-        padding: 10rem 25rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         &__form {
+            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -138,6 +144,63 @@
         input[value=""].react-mapbox-ac-input + span > div{
             display: none !important;
         }
+
+        .address-button{
+            background-color: #f2f1f2;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+
+            &:hover{
+                border: 1px solid $blue;
+            }
+        }
+
+        .check-address-button{
+            background-color: #f2f1f2;
+            border: 1px solid $blue;
+            padding: 1rem;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .textarea-form{
+            padding: 1rem 1rem;
+            height: 100px;
+        }
+
+        .radio-group{
+            display: flex;
+            justify-content: space-between;
+
+            label{
+                border: 1px solid #c7c7c7;
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                text-align: center;
+                position: relative;
+                cursor: pointer;
+
+                input{
+                    background-color: blue;
+
+                    &:checked ~ label{
+                        background-color: red;
+                    }
+                }
+            }
+        }
     }
 
     &__content{
@@ -147,4 +210,35 @@
         border: 1px solid #738a90;
         border-radius: 10px;
     }
+}
+
+.input-form{
+    width: 100%;
+    height: 40px;
+    padding: 0 1rem;
+    border-radius: 5px;
+    border: none;
+    background-color: #f2f1f2;
+    font-family: 'Metropolis-medium', sans-serif;
+}
+
+.form-group{
+    width: 500px;
+    min-width: 500px;
+    padding: 1rem;
+
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+.required:after{
+    content: '*';
+    color: red;
+}
+
+h1{
+    margin: 0 0 10px 0;
 }

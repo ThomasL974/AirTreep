@@ -7,9 +7,24 @@ import { CurrentUserId } from 'src/core/decorators/user.dacorator';
 import { User } from '../user/entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express, Response } from 'express';
+import { FileSizeValidationPipe } from '../../core/pipes/FileSizeValidationPipe.pipe';
 import { diskStorage } from 'multer';
-import { extname } from 'path/posix';
-import { Readable } from 'stream';
+import { v4 as uuidv4 } from 'uuid';
+import path from 'path';
+
+export const storage = {
+  storage: diskStorage({
+    destination: './uploads/destinationImages',
+    filename: (req, file, cb) => {
+      console.log(file);
+      console.log(path);
+      const filename: string = file.originalname.split('.')[0] + '-' + uuidv4();
+      const extension: string = file.originalname.split('.')[1];
+
+      cb(null, `${filename}.${extension}`)
+    }
+  })
+}
 
 @Controller()
 export class PictureController {
@@ -17,9 +32,9 @@ export class PictureController {
 
   @UseGuards(new JwtAuthGuard)
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@Body() createPictureDto: CreatePictureDto, @CurrentUserId() userId: User, @UploadedFile() file: Express.Multer.File) {
-    return await this.pictureService.uploadFile(createPictureDto, userId, file.buffer, file.originalname, file.mimetype);
+  @UseInterceptors(FileInterceptor('file', storage))
+  async uploadFile(@Body() createPictureDto: CreatePictureDto, @CurrentUserId() userId: User, @UploadedFile() file) {
+    return await this.pictureService.uploadFile(createPictureDto, userId, file.filename);
   }
 
   @Get('list')

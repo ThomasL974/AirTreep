@@ -1,13 +1,28 @@
 import axios from 'axios';
+import _ from 'lodash';
 import TokenService from '../auth/token/token.service';
+
+let config = { headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` } };
 
 const getTravels = () => {
     return axios.get(`${process.env.REACT_APP_API_URL}travels/list`)
         .then(response => response.data)
 }
 
+const getTravelsByTitle = (params = {}) => {
+    return axios.get(`${process.env.REACT_APP_API_URL}travels/list`, { params: { ...params } })
+        .then(response => response.data)
+}
+
+const getTravelsByTitleAndUser = (params = {}) => {
+    config = {headers: config.headers, params: { ...params } };
+    return axios.get(`${process.env.REACT_APP_API_URL}travels/list/mts`, config)
+        .then(response => response.data)
+}
+
 const getTravelsByUserId = () => {
-    return axios.get(`${process.env.REACT_APP_API_URL}travels/list/mts`, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
+    config = { headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` } };
+    return axios.get(`${process.env.REACT_APP_API_URL}travels/list/mts`, config)
         .then(response => response.data)
 }
 
@@ -17,19 +32,18 @@ const getTravel = (id) => {
 }
 
 const createTravel = (credentials) => {
-    return axios.post(`${process.env.REACT_APP_API_URL}travels/create`, credentials, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
+    return axios.post(`${process.env.REACT_APP_API_URL}travels/create`, credentials, config)
         .then(response => response.data)
-
 }
 
 const updateTravel = (credentials, id) => {
-    return axios.patch(`${process.env.REACT_APP_API_URL}travels/${id}`, credentials, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
+    return axios.patch(`${process.env.REACT_APP_API_URL}travels/${id}`, credentials, config)
         .then(response => response.data)
 
 }
 
 const deleteTravel = (id) => {
-    return axios.delete(`${process.env.REACT_APP_API_URL}travels/${id}`, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
+    return axios.delete(`${process.env.REACT_APP_API_URL}travels/${id}`, config)
         .then(response => response.data)
 }
 
@@ -39,5 +53,7 @@ export {
     createTravel,
     updateTravel,
     deleteTravel,
-    getTravelsByUserId
+    getTravelsByUserId,
+    getTravelsByTitle,
+    getTravelsByTitleAndUser
 }

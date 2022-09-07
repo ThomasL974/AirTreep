@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import { deleteTravel } from '../../../../core/services/travels/travel.service';
 
 const style = {
     position: 'absolute',
@@ -15,8 +16,18 @@ const style = {
     overflow: 'hidden'
 };
 
-const ConfirmModal = ({ handleClose, travel, handleDelete, open, infos }) => {
-    console.log(travel.title);
+const ConfirmModal = ({ handleClose, travel, open, setOpen, infos, fetchTravels }) => {
+
+    const handleDelete = async (travelId) => {
+        try {
+            await deleteTravel(travelId);
+            setOpen(false);
+            fetchTravels();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <>
             <Modal
@@ -28,7 +39,7 @@ const ConfirmModal = ({ handleClose, travel, handleDelete, open, infos }) => {
                 <Box sx={{ ...style }}>
                     <h2 id="modal-title">{infos.title}</h2>
                     <p id="modal-description">
-                        {infos.description}
+                        Voulez-vous vraiment supprimer le voyage : <span className="bold">{infos.travel}</span> ?
                     </p>
                     <div className='btn-action'>
                         <Button className='btn-close' onClick={handleClose}>Fermer</Button>

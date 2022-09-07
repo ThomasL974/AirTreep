@@ -6,6 +6,18 @@ const getUserInfos = () => {
         .then(response => response.data)
 }
 
+const updateUser = (credentials) => {
+    return axios.patch(`${process.env.REACT_APP_API_URL}auth/update`, credentials, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}` }})
+        .then(response => response.data)
+}
+
+const uploadProfileImg = (formData) => {
+    return axios.post(`${process.env.REACT_APP_API_URL}auth/upload`, formData, {headers: { Authorization: `Bearer ${TokenService.getLocalAccessToken()}`, "Content-Type": "multipart/form-data" }})
+        .then(response => response.data)
+}
+
 export {
-    getUserInfos
+    getUserInfos,
+    updateUser,
+    uploadProfileImg
 }
