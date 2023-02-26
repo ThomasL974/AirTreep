@@ -31,9 +31,11 @@ export class TravelService {
     travel.time = +createTravelDto.time
     travel.latitudeStart = createTravelDto.latitudeStart
     travel.longitudeStart = createTravelDto.longitudeStart
-    travel.postalCode = +createTravelDto.postalCode
+    travel.postalCode = createTravelDto.postalCode
     travel.address = createTravelDto.address
     // Check if the user exist
+
+    console.log(travel);
     if (userId) {
       travel.user = { id: userId } as User
     } else {
@@ -135,6 +137,7 @@ export class TravelService {
             id: true,
             lastName: true,
             firstName: true,
+            pseudo: true,
             password: false,
             email: false
           }
@@ -165,6 +168,7 @@ export class TravelService {
     travel.latitudeStart = updateTravelDto.latitudeStart
     travel.longitudeStart = updateTravelDto.longitudeStart
     travel.address = updateTravelDto.address
+    travel.postalCode = updateTravelDto.postalCode
 
     try {
       await this.travelsRepository.save(travel);

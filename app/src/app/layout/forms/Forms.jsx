@@ -261,11 +261,12 @@ export const FormTravel = () => {
             title: !isCreatingMode ? credentials.title : '',
             activityType: !isCreatingMode ? credentials.activityType : '',
             description: !isCreatingMode ? credentials.description : '',
-            difficulty: !isCreatingMode ? credentials.difficulty : '',
+            difficulty: !isCreatingMode ? parseInt(credentials.difficulty) : '',
             address: !isCreatingMode ? credentials.address : '',
             country: !isCreatingMode ? credentials.country : '',
             city: !isCreatingMode ? credentials.city : '',
             postalCode: !isCreatingMode ? credentials.postalCode : '',
+            time: !isCreatingMode ? credentials.time : ''
         },
         validate,
         enableReinitialize: true,
@@ -274,7 +275,13 @@ export const FormTravel = () => {
         },
     });
 
-    const { handleSubmit, handleChange, handleBlur, values, errors, touched } = formikbag;
+    const { handleSubmit, handleChange, handleBlur, values, errors, touched, setFieldValue } = formikbag;
+
+    // parse string value to int
+    const parseAndHandleChange = (value, setFieldValue, id) => {
+        const parsed = parseInt(value, 10)
+        setFieldValue(id, parsed)
+    }
 
     /**
      * Handle the sending information
@@ -290,7 +297,7 @@ export const FormTravel = () => {
         } catch (error) {
             console.log(error);
             setToast({
-                message: isCreatingMode ? 'Erreur pendant la sauvegarde' : 'Erreur pendant la mise à jour',
+                message: isCreatingMode ? 'Erreur pendant la création' : 'Erreur pendant la mise à jour',
                 severity: 'error'
             })
             handleClick(setOpen);
@@ -352,7 +359,7 @@ export const FormTravel = () => {
                             <FormikProvider value={formikbag}>
                                 {_.map(difficulties, (value, key) =>
                                     <label id={value.id} key={key}>
-                                        <Field id={value.id} type="radio" name="difficulty" className="radio-form" value={value.id} />
+                                        <Field id={value.id} type="radio" onChange={() => parseAndHandleChange(value.id, setFieldValue, 'difficulty')} name="difficulty" className="radio-form" value={value.id} />
                                         {value.label}
                                     </label>
                                 )}
@@ -360,7 +367,7 @@ export const FormTravel = () => {
                         </div>
                         {errors.difficulty && touched.difficulty ? <div className='error-form'>{errors.difficulty}</div> : null}
 
-                        <button type='button' className={`address-button ${showAddressLgn && 'check-address-button'}`} onClick={() => !showAddressLgn ? setShowAddressLgn(true) : setShowAddressLgn(false)}><FaAddressCard/> Une adresse ?</button>
+                        <button type='button' className={`address-button ${showAddressLgn && 'check-address-button'}`} onClick={() => !showAddressLgn ? setShowAddressLgn(true) : setShowAddressLgn(false)}><FaAddressCard /> Une adresse ?</button>
                         {(showAddressLgn || values.address) &&
                             <>
                                 <label className='required'>Adresse</label>

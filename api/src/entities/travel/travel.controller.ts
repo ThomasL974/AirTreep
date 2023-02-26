@@ -36,6 +36,7 @@ export class TravelController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateTravelDto: UpdateTravelDto, @CurrentUserId() userId : User) {
+    console.log(updateTravelDto);
     return await this.travelService.update(id, updateTravelDto, userId);
   }
 

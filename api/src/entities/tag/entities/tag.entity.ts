@@ -1,4 +1,4 @@
-import { Travel } from "src/entities/travel/entities/travel.entity";
+import { Travel } from "../../../entities/travel/entities/travel.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

@@ -59,7 +59,7 @@ const App = () => {
           }
         </div>
         <div className="content-left">
-          {window.location.pathname !== '/' &&
+          {window.location.pathname !== '/'  &&
             <TopBar setTravels={setTravels} travels={travels}></TopBar>
           }
           <div className="content">
@@ -69,7 +69,7 @@ const App = () => {
               <Route exact path='/discover' element={<Discover travels={travels} setTravels={setTravels} />} />
               <Route exact path='/ranking' element={<Rank />} />
               <Route exact path='/ressources' element={<Ressources />} />
-              <Route exact path='/travels/details/:id' element={<Details />} />
+              <Route exact path='/discover/details/:id' element={<Details />} />
 
               {isAuthenticated &&
                 <>

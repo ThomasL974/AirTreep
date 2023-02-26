@@ -10,8 +10,10 @@ import { PictureModule } from './entities/picture/picture.module';
 import { FavouritesTravelModule } from './entities/favourites-travel/favourites-travel.module';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DefaultAdminModule } from 'nestjs-admin'
 
 require('dotenv').config()
+const AdminUser = require('nestjs-admin').AdminUserEntity
 
 @Module({
   imports: [
@@ -59,10 +61,11 @@ require('dotenv').config()
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASS,
       database: process.env.DATABASE_NAME,
-      entities: [],
+      entities: [AdminUser],
       synchronize: true,
       autoLoadEntities: true
-    })
+    }),
+    DefaultAdminModule
   ],
   controllers: [AppController],
   providers: [AppService],

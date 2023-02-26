@@ -41,16 +41,16 @@ const CardTravel = ({ travel, isAuthenticated, fetchTravels }) => {
                     {travel.description}
                 </Typography>
             </CardContent>
-            <CardActions>
-                <NavLink to={'/travels/details/' + travel.id}>
-                    <Button size="small" >Plus de détails</Button>
+            <CardActions className='action-card'>
+                <NavLink to={'/discover/details/' + travel.id}>
+                    <Button className='btn-outlined' size="small" >Plus de détails</Button>
                 </NavLink>
                 {isAuthenticated &&
                     <>
-                        <Button size="small" onClick={handleOpen}>Supprimer</Button>
-                        <NavLink to={'/travels/update/' + travel.id}>
-                            <Button size="small" >Mise à jour</Button>
+                        <NavLink className='margin0' to={'/travels/update/' + travel.id}>
+                            <Button className='btn-outlined' size="small" >Mise à jour</Button>
                         </NavLink>
+                        <Button size="small" className='btn-delete' onClick={handleOpen}>Supprimer</Button>
                         <ConfirmModal
                             handleClose={handleClose}
                             fetchTravels={fetchTravels}

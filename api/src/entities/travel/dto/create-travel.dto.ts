@@ -20,7 +20,7 @@ export class CreateTravelDto {
     arrivalLocation!: string
     latitudeStart!: number
     longitudeStart!: number
-    postalCode!: number
+    postalCode!: string
     address!: string
     userId!: User
 }

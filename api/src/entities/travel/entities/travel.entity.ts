@@ -17,7 +17,7 @@ export class Travel {
     @Column({nullable: true})
     country!: string
     @Column({nullable: true})
-    postalCode!: number
+    postalCode!: string
     @Column({nullable: true})
     activityType!: string
     @Column({nullable: true})

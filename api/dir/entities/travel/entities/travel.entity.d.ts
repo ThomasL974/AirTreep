@@ -1,0 +1,32 @@
+import { Comment } from "src/entities/comment/entities/comment.entity";
+import { FavouritesTravel } from "src/entities/favourites-travel/entities/favourites-travel.entity";
+import { Like } from "src/entities/like/entities/like.entity";
+import { Picture } from "src/entities/picture/entities/picture.entity";
+import { Tag } from "src/entities/tag/entities/tag.entity";
+import { User } from "src/entities/user/entities/user.entity";
+export declare class Travel {
+    id: string;
+    title: string;
+    country: string;
+    activityType: string;
+    city: string;
+    difficulty: number;
+    description: string;
+    time: number;
+    unityTime: number;
+    createdAt: string;
+    updatedAt: Date;
+    startLocation: string;
+    arrivalLocation: string;
+    latitudeStart: number;
+    longitudeStart: number;
+    latitudeEnd: number;
+    longitudeEnd: number;
+    coverPicture: string;
+    pictures: Picture[];
+    user: User;
+    tags: Tag[];
+    comments: Comment[];
+    likes: Like[];
+    favourites: FavouritesTravel[];
+}

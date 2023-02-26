@@ -32,11 +32,13 @@ const getTravel = (id) => {
 }
 
 const createTravel = (credentials) => {
+    console.log(credentials)
     return axios.post(`${process.env.REACT_APP_API_URL}travels/create`, credentials, config)
         .then(response => response.data)
 }
 
 const updateTravel = (credentials, id) => {
+    console.log(credentials);
     return axios.patch(`${process.env.REACT_APP_API_URL}travels/${id}`, credentials, config)
         .then(response => response.data)
 

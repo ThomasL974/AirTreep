@@ -1,12 +1,15 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { BsArrowRight } from 'react-icons/bs'
+import { NavLink } from 'react-router-dom'
 
 const Home = () => {
-    const navigate = useNavigate();
     return (
         <div className="home">
-            <h1>Accueil</h1>
-            <button onClick={() => navigate('/discover')}>welcome</button>
+            <h1 className='title'>Découverte</h1>
+            <NavLink className='margin0 absolute flex' to={'/discover'}>
+                <p>Découvrir</p>
+                <div className='home-button' size="small" ><BsArrowRight className='front-button'/></div>
+            </NavLink>
         </div>
     )
 }
